@@ -4,33 +4,36 @@ import sys
 import os
 import numpy
 
+datasets = ["tor", "newTor", "random"]
 projects = ["flattening", "flatnet", "displaynet", "splaynet"]
 numberOfNodes = [128, 256, 512, 1024]
 numberOfSimulations = 30
 
 input_dir = "../../../Data/projector"
-output_file = "../../csv_data/projector/total_time.csv"
 
-pr_file = open(output_file, "w")
-pr_file.write("project,size,mean,std\n")
+for dataset in datasets:
+    output_file = "../../../csv_data/flatnet/projector/{}/total_time.csv".format(dataset)
 
-for project in projects:
-    for n in numberOfNodes:
-        
-        time = []
+    pr_file = open(output_file, "w")
+    pr_file.write("project,size,mean,std\n")
 
-        for i in range(1, numberOfSimulations + 1):
-            total_time_path = "{}/{}/{}/{}/total_time.txt".format(input_dir, project, n, i)
+    for project in projects:
+        for n in numberOfNodes:
+            
+            time = []
 
-            with open(total_time_path) as f:
-                first_line = f.readline()
+            for i in range(1, numberOfSimulations + 1):
+                total_time_path = "{}/{}/{}/{}/{}/total_time.txt".format(input_dir, dataset, project, n, i)
 
-            content = int(first_line.strip())
-            time.append(content)
+                with open(total_time_path) as f:
+                    first_line = f.readline()
+
+                content = int(first_line.strip())
+                time.append(content)
 
 
-        m = numpy.mean(time)
-        std = numpy.std(time)
-        pr_file.write("{},{},{},{}\n".format(project, n, m, std))
+            m = numpy.mean(time)
+            std = numpy.std(time)
+            pr_file.write("{},{},{},{}\n".format(project, n, m, std))
 
-pr_file.close()
+    pr_file.close()

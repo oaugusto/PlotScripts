@@ -1,5 +1,5 @@
 #setwd("C:/Users/oaugusto/Desktop/Plots/FlatNet")
-setwd("/home/oaugusto/CBNet/PlotsScripts/FlatNet")
+setwd("/home/oaugusto/CBNet/PlotsScripts/csv_data/flatnet")
 
 ################################## Libraries ###################################
 
@@ -14,11 +14,20 @@ theme_set(theme_bw())
 
 ############################# Reading tables  ##################################
 
-total_work.table <- read.csv("./csv_data/projector/total_work.csv")
-makespan.table <-read.csv("./csv_data/projector/total_time.csv")
-clusters.table <-read.csv("./csv_data/projector/cluster.csv")
-throughput.table <-read.csv("./csv_data/projector/throughput.csv")
+total_work.table <- read.csv("./projector/tor/total_work.csv")
+makespan.table <-read.csv("./projector/tor/total_time.csv")
+clusters.table <-read.csv("./projector/tor/cluster.csv")
+throughput.table <-read.csv("./projector/tor/throughput.csv")
 
+#total_work.table <- read.csv("./projector/newTor/total_work.csv")
+#makespan.table <-read.csv("./projector/newTor/total_time.csv")
+#clusters.table <-read.csv("./projector/newTor/cluster.csv")
+#throughput.table <-read.csv("./projector/newTor/throughput.csv")
+
+#total_work.table <- read.csv("./projector/random/total_work.csv")
+#makespan.table <-read.csv("./projector/random/total_time.csv")
+#clusters.table <-read.csv("./projector/random/cluster.csv")
+#throughput.table <-read.csv("./projector/random/throughput.csv")
 
 ############################# Define colors  ##################################
 

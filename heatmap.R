@@ -1,3 +1,4 @@
+setwd("~/CBNet/DataGenerator/output/projector")
 
 library(tidyverse)
 
@@ -5,34 +6,47 @@ library(tidyverse)
 options(scipen = 999)
 theme_set(theme_bw())
 
-sequence.table <- read.csv(file = "./hpcDS/exact_boxlib_multigrid_c_large.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+sequence.table1 <- read.csv(file = "./newTor/128/1_tor_128.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+sequence.table2 <- read.csv(file = "./newTor/256/1_tor_256.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+sequence.table3 <- read.csv(file = "./newTor/512/1_tor_512.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+sequence.table4 <- read.csv(file = "./newTor/1024/1_tor_1024.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+
+sequence.table1$size <- 128
+sequence.table2$size <- 256
+sequence.table3$size <- 512
+sequence.table4$size <- 1024
+
+sequence.table <- rbind(sequence.table1, sequence.table2, sequence.table3, sequence.table4)
 
 sequence.table %>%
-  group_by(x, y) %>%
-  summarise(count = n()) -> count.table
+  group_by(x, y, size) %>%
+  dplyr::summarise(count = dplyr::n()) -> count.table
 
 count.table$x <- as.factor(count.table$x)
 count.table$y <- as.factor(count.table$y)
 
 g <- ggplot(count.table, aes(x, y, fill = count)) +
   geom_raster() +
-  #coord_cartesian(xlim = c(1, 128), ylim = c(1, 128)) +
+  facet_wrap(. ~ size, ncol = 4, scales="free") +
+  #coord_cartesian(xlim = c(0, 1024), ylim = c(0, 1024)) +
   theme(axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(), 
         axis.text.y = element_blank(),
-        axis.ticks = element_blank(),
+        #axis.ticks = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank()) 
+        panel.grid.major = element_blank()) +
+  scale_fill_gradient(low="blue", high="red") +
+  labs(fill = "#Msg") 
 
 plot(g)
 
-IMG_height = 7
-IMG_width = 7
+IMG_height = 2
+IMG_width = 7.5
 
-ggsave(plot = g, filename = "~/CBNet/trace_0_8.pdf", 
+ggsave(plot = g, filename = "~/CBNet/newTor-heatmap.pdf", 
        units = "cm", 
        height = IMG_height,
        width = IMG_width,
-       device = "pdf", scale = 4.0)
+       device = "pdf", scale = 5.0)
 
