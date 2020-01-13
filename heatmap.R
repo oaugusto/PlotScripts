@@ -6,10 +6,10 @@ library(tidyverse)
 options(scipen = 999)
 theme_set(theme_bw())
 
-sequence.table1 <- read.csv(file = "./newTor/128/1_tor_128.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
-sequence.table2 <- read.csv(file = "./newTor/256/1_tor_256.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
-sequence.table3 <- read.csv(file = "./newTor/512/1_tor_512.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
-sequence.table4 <- read.csv(file = "./newTor/1024/1_tor_1024.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+sequence.table1 <- read.csv(file = "./tor/128/1_tor_128.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+sequence.table2 <- read.csv(file = "./tor/256/1_tor_256.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+sequence.table3 <- read.csv(file = "./tor/512/1_tor_512.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
+sequence.table4 <- read.csv(file = "./tor/1024/1_tor_1024.txt", skip = 1, col.names = c("x", "y"), header = FALSE)
 
 sequence.table1$size <- 128
 sequence.table2$size <- 256
@@ -29,7 +29,8 @@ g <- ggplot(count.table, aes(x, y, fill = count)) +
   geom_raster() +
   facet_wrap(. ~ size, ncol = 4, scales="free") +
   #coord_cartesian(xlim = c(0, 1024), ylim = c(0, 1024)) +
-  theme(axis.title.x = element_blank(),
+  theme(text = element_text(size = 25),
+        axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         axis.text.x = element_blank(), 
         axis.text.y = element_blank(),
@@ -44,7 +45,7 @@ plot(g)
 IMG_height = 2
 IMG_width = 7.5
 
-ggsave(plot = g, filename = "~/CBNet/newTor-heatmap.pdf", 
+ggsave(plot = g, filename = "~/CBNet/tor-heatmap.pdf", 
        units = "cm", 
        height = IMG_height,
        width = IMG_width,
