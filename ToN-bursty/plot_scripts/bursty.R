@@ -1,5 +1,5 @@
-setwd("C:/Users/oaugusto/Desktop/PlotScripts/ToN-bursty")
-#setwd("/home/oaugusto/Desktop/ToN")
+#setwd("C:/Users/oaugusto/Desktop/PlotScripts/ToN-bursty")
+setwd("/home/oaugusto/CBNet/PlotsScripts/ToN-bursty")
 
 ################################## Libraries ###################################
 
@@ -54,8 +54,9 @@ total_work.table$abb <- factor(total_work.table$abb, levels = c("StaticOPT", "Sp
 total_work.table$size <- as.factor(total_work.table$size)
 
 # Init Ggplot Base Plot
-total_work.plot <- ggplot(total_work.table, aes(x = size, y = mean, col = abb)) +
-  geom_boxplot(position = "identity", size = 0.5) +
+total_work.plot <- ggplot(total_work.table, aes(x = size, y = mean, col = abb, fill = abb)) +
+  geom_point(size = 0, shape = 22) +
+  geom_boxplot(position = "identity", size = 0.5, show.legend = FALSE) +
   geom_errorbar(total_work.table, mapping = aes(x = size, 
                                             ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                                             ymax = mean + ((qnorm(0.975)*std)/sqrt(30))),
@@ -73,14 +74,18 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20, color 
                                            axis.title.y = element_text(size = 25),
                                            axis.text.x = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
+                                           legend.text = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.25, 0.85))
+                                           legend.position = c(0.25, 0.85),
+                                           legend.background = element_rect(fill = "transparent", colour = "transparent"))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{4})), x = "n") +
   scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
-  scale_y_continuous(labels = function(x){paste0(x/10000)})
+  scale_fill_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
+  scale_y_continuous(labels = function(x){paste0(x/10000)}) +
+  guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(total_work.plot)
 
@@ -116,12 +121,13 @@ work_cdf.plot <- work_cdf.plot + theme(text = element_text(size = 20),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
-                                       axis.title.x = element_text(size = 20),
-                                       axis.title.y = element_text(size = 20),
-                                       axis.text.x = element_text(size = 18),
-                                       axis.text.y = element_text(size = 18),
+                                       axis.title.x = element_text(size = 25),
+                                       axis.title.y = element_text(size = 25),
+                                       axis.text.x = element_text(size = 20),
+                                       axis.text.y = element_text(size = 20),
+                                       legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.35, 0.5))
+                                       legend.position = c(0.35, 0.576))
 
 work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -150,8 +156,9 @@ makespan.table$abb <- factor(makespan.table$abb, levels = c("SplayNet", "DiSplay
 makespan.table$size <- as.factor(makespan.table$size)
 
 # Init Ggplot Base Plot
-makespan.plot <- ggplot(makespan.table, aes(x = size, y = mean, color = abb)) +
-  geom_boxplot(position = "identity", size = 0.5) +
+makespan.plot <- ggplot(makespan.table, aes(x = size, y = mean, color = abb, fill = abb)) +
+  geom_point(size = 0, shape = 22) +
+  geom_boxplot(position = "identity", size = 0.5, show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                     ymax = mean + ((qnorm(0.975)*std)/sqrt(30)) ), 
                 width=.2,
@@ -166,6 +173,7 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
                                        axis.title.y = element_text(size = 25),
                                        axis.text.x = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
+                                       legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
                                        legend.position = c(0.25, 0.85))
 
@@ -173,7 +181,9 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(x = "#Nodes", y = expression(paste("#Rounds x ", 10^{4}))) +
   scale_color_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(labels = function(x){paste0(x/10000)})
+  scale_fill_manual(values = c(sn_color, dsn_color)) +
+  scale_y_continuous(labels = function(x){paste0(x/10000)}) +
+  guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
 
@@ -206,16 +216,16 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
-                                           axis.title.x = element_text(size = 15),
-                                           axis.title.y = element_text(size = 15),
-                                           axis.text.x = element_text(size = 16),
-                                           axis.text.y = element_text(size = 14),
+                                           axis.title.x = element_text(size = 25),
+                                           axis.title.y = element_text(size = 25),
+                                           axis.text.x = element_text(size = 20),
+                                           axis.text.y = element_text(size = 20),
                                            legend.title = element_blank(),
                                            legend.position = c(0.3, 0.3))
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = expression(paste("Time (rounds)", 10^3)), y = "Requests completed (per round)") +
+  labs(x = expression(paste("Time (rounds)", 10^3)), y = "Requests completed per round") +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
   scale_x_continuous(labels = function(x){paste0(x/1000)})
 
