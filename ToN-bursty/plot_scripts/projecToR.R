@@ -1,4 +1,4 @@
-setwd("C:/Users/oaugusto/Desktop/ToN")
+setwd("C:/Users/oaugusto/Desktop/PlotScripts/ToN-bursty")
 #setwd("/home/oaugusto/Desktop/ToN")
 
 ################################## Libraries ###################################
@@ -84,11 +84,11 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
 
 plot(total_work.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/projecToR/total_work.pdf", units = "cm",
-       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 ############################# cdf work  ##################################
 
@@ -121,7 +121,7 @@ work_cdf.plot <- work_cdf.plot + theme(text = element_text(size = 20),
                                        axis.text.x = element_text(size = 18),
                                        axis.text.y = element_text(size = 18),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.655, 0.2))
+                                       legend.position = c(0.75, 0.2))
 
 work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -131,11 +131,11 @@ work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
 
 plot(work_cdf.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/projecToR/work_cdf.pdf", units = "cm",
-       plot =work_cdf.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot =work_cdf.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# makespan  ##################################
@@ -177,11 +177,11 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
 
 plot(makespan.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/projecToR/makespan.pdf", units = "cm",
-       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# throughput  ##################################
@@ -221,11 +221,11 @@ throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
 
 plot(throughput.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/projecToR/throughput.pdf", units = "cm",
-       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# cluster ##################################
@@ -270,8 +270,8 @@ clusters.plot <- clusters.plot +
 
 plot(clusters.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/projecToR/clusters.pdf", units = "cm",
-       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)

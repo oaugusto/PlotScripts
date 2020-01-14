@@ -1,4 +1,4 @@
-setwd("C:/Users/oaugusto/Desktop/ToN")
+setwd("C:/Users/oaugusto/Desktop/PlotScripts/ToN-bursty")
 #setwd("/home/oaugusto/Desktop/ToN")
 
 ################################## Libraries ###################################
@@ -65,7 +65,7 @@ total_work.plot <- ggplot(total_work.table, aes(x = size, y = mean, col = abb)) 
 
 
 # Modify theme components -------------------------------------------
-total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
+total_work.plot <- total_work.plot + theme(text = element_text(size = 20, color = "#000000"),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
@@ -74,21 +74,21 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
                                            axis.text.x = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.2, 0.8))
+                                           legend.position = c(0.25, 0.85))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{4})), x = "n") +
   scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
-  scale_y_continuous(breaks = seq(0, 60000, 10000), labels = function(x){paste0(x/10000)})
+  scale_y_continuous(labels = function(x){paste0(x/10000)})
 
 plot(total_work.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/bursty/total_work.pdf", units = "cm",
-       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 ############################# cdf work  ##################################
 
@@ -121,7 +121,7 @@ work_cdf.plot <- work_cdf.plot + theme(text = element_text(size = 20),
                                        axis.text.x = element_text(size = 18),
                                        axis.text.y = element_text(size = 18),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.655, 0.2))
+                                       legend.position = c(0.35, 0.5))
 
 work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -131,11 +131,11 @@ work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
 
 plot(work_cdf.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/bursty/work_cdf.pdf", units = "cm",
-       plot =work_cdf.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot =work_cdf.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# makespan  ##################################
@@ -167,7 +167,7 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
                                        axis.text.x = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.7, 0.6))
+                                       legend.position = c(0.25, 0.85))
 
 makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -177,11 +177,11 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
 
 plot(makespan.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/bursty/makespan.pdf", units = "cm",
-       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# throughput  ##################################
@@ -211,7 +211,7 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
                                            axis.text.x = element_text(size = 16),
                                            axis.text.y = element_text(size = 14),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.7, 0.8))
+                                           legend.position = c(0.3, 0.3))
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -221,11 +221,11 @@ throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
 
 plot(throughput.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/bursty/throughput.pdf", units = "cm",
-       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# cluster ##################################
@@ -270,8 +270,8 @@ clusters.plot <- clusters.plot +
 
 plot(clusters.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/bursty/clusters.pdf", units = "cm",
-       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)

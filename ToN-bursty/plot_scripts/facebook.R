@@ -1,5 +1,5 @@
-#setwd("C:/Users/oaugusto/Desktop/Plots/ToN")
-setwd("/home/oaugusto/CBNet/PlotsScripts/ToN")
+setwd("C:/Users/oaugusto/Desktop/PlotScripts/ToN-bursty")
+#setwd("/home/oaugusto/Desktop/ToN")
 
 ################################## Libraries ###################################
 
@@ -43,16 +43,16 @@ bt2 = "#555555"
 ############################# total work ##################################
 
 total_work.table["abb"] <- revalue(total_work.table$project, 
-                                   c("splaynet" = "sn", 
-                                     "displaynet" = "dsn",
-                                     "optnet" = "opt",
-                                     "simplenet" = "bt"))
+                                   c("splaynet" = "SplayNet", 
+                                     "displaynet" = "DiSplayNet",
+                                     "optnet" = "StaticOPT",
+                                     "simplenet" = "Balanced Tree"))
 
-total_work.table$abb <- factor(total_work.table$abb, levels = c("opt", "sn", "dsn", "bt"))
+total_work.table$abb <- factor(total_work.table$abb, levels = c("StaticOPT", "SplayNet", "DiSplayNet", "Balanced Tree"))
 
 # Init Ggplot Base Plot
-total_work.plot <- ggplot(total_work.table, aes(x = abb, y = work, fill = abb)) +
-  geom_bar(stat = "identity")
+total_work.plot <- ggplot(total_work.table, aes(x = abb, y = work, color = abb)) +
+  geom_boxplot(position = "identity", size = 0.5)
 
 
 # Modify theme components -------------------------------------------
@@ -67,32 +67,32 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
                                            axis.ticks.x = element_blank(),
                                            legend.text = element_text(size = 12),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.85, 0.82))
+                                           legend.position = c(0.75, 0.4))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{6}))) +
-  scale_fill_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
+  scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
   scale_y_continuous(breaks = seq(10000000, 170000000, 2000000), labels = function(x){paste0(x/1000000)})
 
 plot(total_work.plot)
 
-IMG_height = 2.5
-IMG_width = 3.0
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/facebook/total_work.pdf", units = "cm",
-       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 ############################# cdf work  ##################################
 
 
 work_cdf.table["abb"] <- revalue(work_cdf.table$project, 
-                                 c("splaynet" = "sn", 
-                                   "displaynet" = "dsn",
-                                   "optnet" = "opt",
-                                   "simplenet" = "bt"))
+                                 c("splaynet" = "SplayNet", 
+                                   "displaynet" = "DiSplayNet",
+                                   "optnet" = "StaticOPT",
+                                   "simplenet" = "Balanced Tree"))
 
-work_cdf.table$abb <- factor(work_cdf.table$abb, levels = c("opt", "sn", "dsn", "bt"))
+work_cdf.table$abb <- factor(work_cdf.table$abb, levels = c("StaticOPT", "SplayNet", "DiSplayNet", "Balanced Tree"))
 
 # Init Ggplot Base Plot
 work_cdf.plot <- ggplot(work_cdf.table, aes(x = value, colour = abb)) +
@@ -111,35 +111,36 @@ work_cdf.plot <- work_cdf.plot + theme(text = element_text(size = 20),
                                        axis.text.y = element_text(size = 18),
                                        legend.title = element_blank(),
                                        legend.text = element_text(size = 18),
-                                       legend.position = c(0.8, 0.2))
+                                       legend.position = c(0.75, 0.2))
 
 work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank()) +
-  labs(x = "Steps per request", y = "CDF of Requests") +
+  labs(x = "Number of steps", y = "CDF of Requests") +
   scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
   coord_cartesian(xlim = c(0, 30))
 
 plot(work_cdf.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/facebook/work_cdf.pdf", units = "cm",
-       plot =work_cdf.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot =work_cdf.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# makespan  ##################################
 
 
 makespan.table["abb"] <- revalue(makespan.table$project, 
-                                 c("splaynet" = "sn", 
-                                   "displaynet" = "dsn"))
+                                 c("splaynet" = "SplayNet", 
+                                   "displaynet" = "DiSplayNet"))
 
-makespan.table$abb <- factor(makespan.table$abb, levels = c("sn", "dsn"))
+makespan.table$abb <- factor(makespan.table$abb, levels = c("SplayNet", "DiSplayNet"))
+
 
 # Init Ggplot Base Plot
 makespan.plot <- ggplot(makespan.table, aes(x = abb, y = work, color = abb)) +
-  geom_boxplot(size = 1.5) 
+  geom_boxplot(size = 0.5) 
 
 # Modify theme components -------------------------------------------
 makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
@@ -163,21 +164,21 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
 
 plot(makespan.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/facebook/makespan.pdf", units = "cm",
-       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# throughput  ##################################
 
 
 throughput.table["abb"] <- revalue(throughput.table$project, 
-                                   c("splaynet" = "sn", 
-                                     "displaynet" = "dsn"))
+                                   c("splaynet" = "SplayNet", 
+                                     "displaynet" = "DiSplayNet"))
 
-throughput.table$abb <- factor(throughput.table$abb, levels = c("sn", "dsn"))
+throughput.table$abb <- factor(throughput.table$abb, levels = c("SplayNet", "DiSplayNet"))
 
 # Init Ggplot Base Plot
 throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
@@ -204,11 +205,11 @@ throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
 
 plot(throughput.plot)
 
-IMG_height = 2.5
-IMG_width = 3.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/facebook/throughput.pdf", units = "cm",
-       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# cluster ##################################
@@ -219,6 +220,10 @@ clusters.table["abb"] <- revalue(clusters.table$project,
                                    "displaynet" = "dsn"))
 
 clusters.table$abb <- factor(clusters.table$abb, levels = c("sn", "dsn"))
+
+
+clusters.table %>% filter(
+  abb %in% c("dsn")) -> clusters.table
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
@@ -248,8 +253,8 @@ clusters.plot <- clusters.plot +
 
 plot(clusters.plot)
 
-IMG_height = 2.5
-IMG_width = 2.5
+IMG_height = 15
+IMG_width = 15
 
 ggsave(filename = "./plots/facebook/clusters.pdf", units = "cm",
-       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 4.0)
+       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
