@@ -221,7 +221,8 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
                                            axis.text.x = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.3, 0.3))
+                                           legend.position = c(0.3, 0.3),
+                                           legend.background = element_rect(fill = "transparent", colour = "transparent"))
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -264,8 +265,8 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
-                                       axis.title.x = element_text(size = 20),
-                                       axis.title.y = element_text(size = 20),
+                                       axis.title.x = element_text(size = 25),
+                                       axis.title.y = element_text(size = 25),
                                        axis.text.x = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.title = element_blank(),

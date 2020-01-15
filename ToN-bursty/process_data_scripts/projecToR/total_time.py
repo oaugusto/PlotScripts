@@ -8,7 +8,7 @@ projects = ["displaynet", "splaynet"]
 numberOfNodes = [128, 256, 512, 1024]
 numberOfSimulations = 30
 
-input_dir = "../../../Data/projector"
+input_dir = "../../../Data/projector/newTor"
 output_file = "../../csv_data/projector/total_time.csv"
 
 pr_file = open(output_file, "w")

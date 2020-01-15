@@ -131,7 +131,7 @@ work_cdf.plot <- work_cdf.plot + theme(text = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.3, 0.65))
+                                       legend.position = c(0.25, 0.7))
 
 work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank()) +
@@ -269,7 +269,7 @@ clusters.table %>% filter(
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1) +
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5) +
   # Add mean line
   geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
@@ -284,7 +284,7 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.1, 0.9),
+                                       legend.position = "none",
                                        panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank())
 

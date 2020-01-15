@@ -76,7 +76,7 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
                                            legend.text = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.4, 0.65),
+                                           legend.position = c(0.25, 0.85),
                                            legend.background = element_rect(fill = "transparent", colour = "transparent"))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
@@ -127,7 +127,7 @@ work_cdf.plot <- work_cdf.plot + theme(text = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.75, 0.2))
+                                       legend.position = c(0.75, 0.15))
 
 work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -175,7 +175,7 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.7, 0.6))
+                                       legend.position = c(0.25, 0.75))
 
 makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -222,7 +222,7 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
                                            legend.text = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.7, 0.8))
+                                           legend.position = c(0.77, 0.8))
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +

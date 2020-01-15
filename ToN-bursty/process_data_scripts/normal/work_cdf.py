@@ -9,7 +9,7 @@ numberOfNodes = [128, 1024]
 std_sim = [0.2, 0.8, 1.6, 3.2, 6.4]
 numberOfSimulations = 1
 
-input_dir = "../../raw_data/normal"
+input_dir = "../../../Data/normal"
 output_file_rot = "../../csv_data/normal/work_cdf.csv"
 
 pr_file = open(output_file_rot, "w")
@@ -20,8 +20,8 @@ for project in projects:
         for s in std_sim:
             for i in range(1, numberOfSimulations + 1):
                     
-                rot_path = "{}/{}/{}/{}/rotations_per_splay.txt".format(input_dir, project, n, s)
-                rou_path = "{}/{}/{}/{}/routing_per_splay.txt".format(input_dir, project, n, s)
+                rot_path = "{}/{}/{}/{}/1/rotations_per_splay.txt".format(input_dir, project, n, s)
+                rou_path = "{}/{}/{}/{}/1/routing_per_splay.txt".format(input_dir, project, n, s)
 
                 with open(rot_path) as f:
                     content = f.readlines()

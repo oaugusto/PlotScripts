@@ -171,6 +171,7 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
 
 plot(makespan.plot)
 
+
 IMG_height = 15
 IMG_width = 15
 
@@ -235,7 +236,7 @@ clusters.table %>% filter(
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 10000) +
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5) +
   # Add mean line
   geom_vline(aes(xintercept=mean(value)), linetype="dashed") 
 
@@ -244,13 +245,13 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
-                                       axis.title.x = element_text(size = 20),
-                                       axis.title.y = element_text(size = 20),
+                                       axis.title.x = element_text(size = 25),
+                                       axis.title.y = element_text(size = 25),
                                        axis.text.x = element_text(size = 20),
-                                       axis.text.y = element_text(size = 12),
-                                       legend.text = element_text(size = 12),
+                                       axis.text.y = element_text(size = 20),
+                                       legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.8, 0.8),
+                                       legend.position = "none",
                                        panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank())
 
