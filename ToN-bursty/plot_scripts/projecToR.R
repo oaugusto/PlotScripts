@@ -56,7 +56,7 @@ total_work.table$size <- as.factor(total_work.table$size)
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(total_work.table, aes(x = size, y = mean, col = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 0.5, show.legend = FALSE) +
+  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) +
   geom_errorbar(total_work.table, mapping = aes(x = size, 
                                             ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                                             ymax = mean + ((qnorm(0.975)*std)/sqrt(30))),
@@ -84,8 +84,10 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
   labs(y = expression(paste("Work x", 10^{4})), x = "n") +
   scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
-  scale_y_continuous(breaks = seq(0, 60000, 10000), labels = function(x){paste0(x/10000)}) +
+  scale_y_continuous(limits = c(0, 200000), breaks = seq(0, 200000, 50000), labels = function(x){paste0(x/10000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
+
+#breaks = seq(0, 60000, 10000),
 
 plot(total_work.plot)
 
@@ -144,7 +146,8 @@ ggsave(filename = "./plots/projecToR/work_cdf.pdf", units = "cm",
        plot =work_cdf.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
-############################# makespan  ##################################
+############################# makespan  ##################################ggsave(filename = "./plots/projecToR/clusters.pdf", units = "cm",
+
 
 
 makespan.table["abb"] <- revalue(makespan.table$project, 
@@ -158,7 +161,7 @@ makespan.table$size <- as.factor(makespan.table$size)
 # Init Ggplot Base Plot
 makespan.plot <- ggplot(makespan.table, aes(x = size, y = mean, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 0.5, show.legend = FALSE) +
+  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                     ymax = mean + ((qnorm(0.975)*std)/sqrt(30)) ), 
                 width=.2,
@@ -179,10 +182,10 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
 
 makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = "#Nodes", y = expression(paste("#Rounds x ", 10^{3}))) +
+  labs(x = "n", y = expression(paste("#Rounds x ", 10^{3}))) +
   scale_color_manual(values = c(sn_color, dsn_color)) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(breaks = seq(0, 30000, 5000), labels = function(x){paste0(x/1000)}) +
+  scale_y_continuous(limits = c(0, 70000), breaks = seq(0, 70000, 10000), labels = function(x){paste0(x/1000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
@@ -256,7 +259,7 @@ clusters.table %>% filter(
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5) +
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
   # Add mean line
   geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
@@ -277,7 +280,8 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
 clusters.plot <- clusters.plot + 
   labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(breaks = seq(0, 16000, 4000), labels = function(x){paste0(x/1000)})
+  scale_y_continuous(lim = c(0, 12000), breaks = seq(0, 12000, 3000), labels = function(x){paste0(x/1000)}) +
+  xlim(0, 15)
 
 plot(clusters.plot)
 

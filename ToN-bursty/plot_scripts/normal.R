@@ -58,7 +58,7 @@ total_work.table %>% filter(
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(total_work.table, aes(x = std_par, y = mean, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 0.5, show.legend = FALSE) +
+  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) +
   geom_errorbar(total_work.table, mapping = aes(x = std_par, 
                                                 ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                                                 ymax = mean + ((qnorm(0.975)*std)/sqrt(30))),
@@ -78,14 +78,14 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
                                            legend.text = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.25, 0.75))
+                                           legend.position = c(0.75, 0.2))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(x = "std", y = expression(paste("Work x", 10^{4}))) +
   scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
-  scale_y_continuous(breaks = seq(0, 200000, 20000), labels = function(x){paste0(x/10000)}) +
+  scale_y_continuous(limits = c(0, 200000), breaks = seq(0, 200000, 50000), labels = function(x){paste0(x/10000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(total_work.plot)
@@ -165,7 +165,7 @@ makespan.table %>% filter(
 # Init Ggplot Base Plot
 makespan.plot <- ggplot(makespan.table, aes(x = std_par, y = mean, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 0.5, show.legend = FALSE) +
+  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                     ymax = mean + ((qnorm(0.975)*std)/sqrt(30)) ), 
                 width=.2,
@@ -186,10 +186,10 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
 
 makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank()) +
-  labs(x = "std", y = expression(paste("#Rounds x ", 10^{4}))) +
+  labs(x = "std", y = expression(paste("#Rounds x ", 10^{3}))) +
   scale_color_manual(values = c(sn_color, dsn_color)) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(labels = function(x){paste0(x/10000)}) +
+  scale_y_continuous(limits = c(0, 70000), breaks = seq(0, 70000, 10000), labels = function(x){paste0(x/1000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
@@ -269,7 +269,7 @@ clusters.table %>% filter(
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5) +
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
   # Add mean line
   geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
@@ -289,9 +289,10 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
                                        panel.grid.major = element_blank())
 
 clusters.plot <- clusters.plot + 
-  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^4))) +
+  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(breaks = seq(0, 400000, 10000), labels = function(x){paste0(x/10000)})
+  scale_y_continuous(lim = c(0, 60000), breaks = seq(0, 60000, 20000), labels = function(x){paste0(x/1000)}) +
+  xlim(0, 15)
 
 plot(clusters.plot)
 

@@ -53,7 +53,7 @@ total_work.table$abb <- factor(total_work.table$abb, levels = c("StaticOPT", "Sp
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(total_work.table, aes(x = abb, y = work, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 0.5, show.legend = FALSE)
+  geom_boxplot(position = "identity", size = 1, show.legend = FALSE)
 
 
 # Modify theme components -------------------------------------------
@@ -144,7 +144,7 @@ makespan.table$abb <- factor(makespan.table$abb, levels = c("SplayNet", "DiSplay
 # Init Ggplot Base Plot
 makespan.plot <- ggplot(makespan.table, aes(x = abb, y = work, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(size = 0.5, show.legend = FALSE) 
+  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) 
 
 # Modify theme components -------------------------------------------
 makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
@@ -236,7 +236,7 @@ clusters.table %>% filter(
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5) +
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
   # Add mean line
   geom_vline(aes(xintercept=mean(value)), linetype="dashed") 
 
@@ -258,7 +258,8 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
 clusters.plot <- clusters.plot + 
   labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^4))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(labels = function(x){paste0(x/10000)})
+  scale_y_continuous(labels = function(x){paste0(x/10000)})+
+  xlim(0, 15)
 
 plot(clusters.plot)
 
@@ -267,3 +268,4 @@ IMG_width = 15
 
 ggsave(filename = "./plots/facebook/clusters.pdf", units = "cm",
        plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+
