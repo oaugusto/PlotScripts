@@ -56,13 +56,20 @@ total_work.table$size <- as.factor(total_work.table$size)
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(total_work.table, aes(x = size, y = mean, col = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) +
+  geom_boxplot(position = "identity", size = 1.25, show.legend = FALSE) +
   geom_errorbar(total_work.table, mapping = aes(x = size, 
                                             ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                                             ymax = mean + ((qnorm(0.975)*std)/sqrt(30))),
                                             width=.2,                    # Width of the error bars
                                             position="identity",
-                                            colour = "#000000")
+                                            colour = "#000000") +
+  facet_grid(y ~ x, as.table = FALSE, labeller = function(variable, value) {
+    if (variable=='x') {
+      return(paste("x:",value))
+    } else {
+      return(paste("y:",value))
+    }
+  })
 
 
 # Modify theme components -------------------------------------------
@@ -76,7 +83,8 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20, color 
                                            axis.text.y = element_text(size = 20),
                                            legend.text = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.25, 0.85),
+                                           #legend.position = c(0.25, 0.85), #
+                                           legend.position = c(0.07, 0.95),
                                            legend.background = element_rect(fill = "transparent", colour = "transparent"))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
@@ -84,7 +92,7 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
   labs(y = expression(paste("Work x", 10^{4})), x = "n") +
   scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
-  scale_y_continuous(limits = c(0, 200000), breaks = seq(0, 200000, 50000), labels = function(x){paste0(x/10000)}) +
+  scale_y_continuous(limits = c(0, 250000), breaks = seq(0, 250000, 50000), labels = function(x){paste0(x/10000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(total_work.plot)
@@ -113,7 +121,14 @@ work_cdf.table %>% filter(
 # Init Ggplot Base Plot
 work_cdf.plot <- ggplot(work_cdf.table, aes(x = value, colour = abb)) +
   stat_ecdf(aes(linetype = abb), geom = "step", size = 1.2) +
-  geom_hline(yintercept = 1, linetype="dashed") 
+  geom_hline(yintercept = 1, linetype="dashed") +
+  facet_grid(y ~ x, as.table = FALSE, labeller = function(variable, value) {
+    if (variable=='x') {
+      return(paste("x:",value))
+    } else {
+      return(paste("y:",value))
+    }
+  })
 
 
 # Modify theme components -------------------------------------------
@@ -127,7 +142,7 @@ work_cdf.plot <- work_cdf.plot + theme(text = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.35, 0.576))
+                                       legend.position = c(0.75, 0.2))
 
 work_cdf.plot <- work_cdf.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -158,11 +173,18 @@ makespan.table$size <- as.factor(makespan.table$size)
 # Init Ggplot Base Plot
 makespan.plot <- ggplot(makespan.table, aes(x = size, y = mean, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) +
+  geom_boxplot(position = "identity", size = 1.25, show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                     ymax = mean + ((qnorm(0.975)*std)/sqrt(30)) ), 
                 width=.2,
-                position="identity") 
+                position="identity") +
+  facet_grid(y ~ x, as.table = FALSE, labeller = function(variable, value) {
+    if (variable=='x') {
+      return(paste("x:",value))
+    } else {
+      return(paste("y:",value))
+    }
+  })
 
 # Modify theme components -------------------------------------------
 makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
@@ -175,14 +197,15 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.25, 0.85))
+                                       #legend.position = c(0.25, 0.85)) #before
+                                       legend.position = c(0.1, 0.95))
 
 makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(x = "n", y = expression(paste("#Rounds x ", 10^{3}))) +
   scale_color_manual(values = c(sn_color, dsn_color)) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(limits = c(0, 70000), breaks = seq(0, 70000, 10000), labels = function(x){paste0(x/1000)}) +
+  scale_y_continuous(limits = c(0, 80000), breaks = seq(0, 80000, 10000), labels = function(x){paste0(x/1000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
@@ -209,7 +232,14 @@ throughput.table %>% filter(
 
 # Init Ggplot Base Plot
 throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
-  geom_density(aes(y = ..count..), alpha = 0.5) 
+  geom_density(aes(y = ..count..), alpha = 0.5) +
+  facet_grid(y ~ x, as.table = FALSE, labeller = function(variable, value) {
+    if (variable=='x') {
+      return(paste("x:",value))
+    } else {
+      return(paste("y:",value))
+    }
+  })
 
 # Modify theme components -------------------------------------------
 throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
@@ -221,7 +251,7 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
                                            axis.text.x = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.3, 0.3),
+                                           legend.position = c(0.27, 0.27),
                                            legend.background = element_rect(fill = "transparent", colour = "transparent"))
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
@@ -258,7 +288,14 @@ clusters.table %>% filter(
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
   geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
   # Add mean line
-  geom_vline(aes(xintercept=mean(value)), linetype="dashed")
+  geom_vline(aes(xintercept=mean(value)), linetype="dashed") +
+  facet_grid(y ~ x, as.table = FALSE, labeller = function(variable, value) {
+    if (variable=='x') {
+      return(paste("x:",value))
+    } else {
+      return(paste("y:",value))
+    }
+  })
 
 # Modify theme components -------------------------------------------
 clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
@@ -277,7 +314,7 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
 clusters.plot <- clusters.plot + 
   labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(lim = c(0, 12000), breaks = seq(0, 12000, 3000), labels = function(x){paste0(x/1000)}) +
+  scale_y_continuous(lim = c(0, 12000), breaks = seq(0, 12000, 2000), labels = function(x){paste0(x/1000)}) +
   xlim(0, 15)
 
 plot(clusters.plot)

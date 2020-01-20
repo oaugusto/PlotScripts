@@ -56,7 +56,7 @@ total_work.table$size <- as.factor(total_work.table$size)
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(total_work.table, aes(x = size, y = mean, col = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) +
+  geom_boxplot(position = "identity", size = 1.25, show.legend = FALSE) +
   geom_errorbar(total_work.table, mapping = aes(x = size, 
                                             ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                                             ymax = mean + ((qnorm(0.975)*std)/sqrt(30))),
@@ -161,7 +161,7 @@ makespan.table$size <- as.factor(makespan.table$size)
 # Init Ggplot Base Plot
 makespan.plot <- ggplot(makespan.table, aes(x = size, y = mean, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) +
+  geom_boxplot(position = "identity", size = 1.25, show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
                     ymax = mean + ((qnorm(0.975)*std)/sqrt(30)) ), 
                 width=.2,
@@ -280,7 +280,7 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
 clusters.plot <- clusters.plot + 
   labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(lim = c(0, 12000), breaks = seq(0, 12000, 3000), labels = function(x){paste0(x/1000)}) +
+  scale_y_continuous(lim = c(0, 12000), breaks = seq(0, 12000, 2000), labels = function(x){paste0(x/1000)}) +
   xlim(0, 15)
 
 plot(clusters.plot)

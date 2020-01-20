@@ -53,7 +53,7 @@ total_work.table$abb <- factor(total_work.table$abb, levels = c("StaticOPT", "Sp
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(total_work.table, aes(x = abb, y = work, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 1, show.legend = FALSE)
+  geom_boxplot(position = "identity", size = 1.25, show.legend = FALSE)
 
 
 # Modify theme components -------------------------------------------
@@ -68,14 +68,14 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
                                            axis.ticks.x = element_blank(),
                                            legend.text = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.75, 0.4))
+                                           legend.position = c(0.75, 0.15))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{6}))) +
   scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
-  scale_y_continuous(breaks = seq(10000000, 170000000, 2000000), labels = function(x){paste0(x/1000000)}) +
+  scale_y_continuous(limits = c(0, 20000000), breaks = seq(0, 20000000, 5000000), labels = function(x){paste0(x/1000000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(total_work.plot)
@@ -144,7 +144,7 @@ makespan.table$abb <- factor(makespan.table$abb, levels = c("SplayNet", "DiSplay
 # Init Ggplot Base Plot
 makespan.plot <- ggplot(makespan.table, aes(x = abb, y = work, color = abb, fill = abb)) +
   geom_point(size = 0, shape = 22) +
-  geom_boxplot(position = "identity", size = 1, show.legend = FALSE) 
+  geom_boxplot(position = "identity", size = 1.25, show.legend = FALSE) 
 
 # Modify theme components -------------------------------------------
 makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
@@ -166,7 +166,7 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
   scale_color_manual(values = c(sn_color, dsn_color)) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
   #coord_cartesian(ylim = c(2900000, 3400000)) +
-  scale_y_continuous(labels = function(x){paste0(x/100000)}) +
+  scale_y_continuous(limits = c(0, 7000000), breaks = seq(0, 7000000, 1000000), labels = function(x){paste0(x/100000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
@@ -256,9 +256,9 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
                                        panel.grid.major = element_blank())
 
 clusters.plot <- clusters.plot + 
-  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^4))) +
+  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^5))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(labels = function(x){paste0(x/10000)})+
+  scale_y_continuous(lim = c(0, 1200000), breaks = seq(0, 1200000, 200000), labels = function(x){paste0(x/100000)})+
   xlim(0, 15)
 
 plot(clusters.plot)
