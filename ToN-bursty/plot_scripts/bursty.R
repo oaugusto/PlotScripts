@@ -19,7 +19,7 @@ makespan.table <-read.csv("./csv_data/bursty/total_time.csv")
 clusters.table <-read.csv("./csv_data/bursty/cluster.csv")
 throughput.table <-read.csv("./csv_data/bursty/throughput.csv")
 work_cdf.table <- read.csv("./csv_data/bursty/work_cdf.csv")
-
+work_boxplot.table <- read.csv("./csv_data/bursty/work_boxplot.csv")
 
 ############################# Define colors  ##################################
 
@@ -324,4 +324,60 @@ IMG_width = 15
 
 ggsave(filename = "./plots/bursty/clusters.pdf", units = "cm",
        plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+
+############################# work boxplot ##################################
+
+work_boxplot.table["abb"] <- revalue(work_boxplot.table$project, 
+                                   c("bursty" = "oldVersion", 
+                                     "bursty_new" = "newVersion"))
+
+work_boxplot.table$abb <- factor(work_boxplot.table$abb, levels = c("oldVersion", "newVersion"))
+
+
+work_boxplot.table$size <- as.factor(work_boxplot.table$size)
+
+# Init Ggplot Base Plot
+work_boxplot.plot <- ggplot(work_boxplot.table, aes(x = size, y = value, col = abb, fill = abb)) +
+  geom_point(size = 0, shape = 22, position = position_dodge(1)) +
+  geom_boxplot(position = position_dodge(1), size = 1.25, show.legend = FALSE) +
+  stat_summary(position = position_dodge(1), fun.y=mean, geom="point", shape=5, size=4) +
+  facet_grid(y ~ x, as.table = FALSE, labeller = function(variable, value) {
+    if (variable=='x') {
+      return(paste("x:",value))
+    } else {
+      return(paste("y:",value))
+    }
+  })
+
+
+# Modify theme components -------------------------------------------
+work_boxplot.plot <- work_boxplot.plot + theme(text = element_text(size = 20, color = "#000000"),
+                                           plot.title = element_blank(),
+                                           plot.subtitle = element_blank(),
+                                           plot.caption = element_blank(),
+                                           axis.title.x = element_text(size = 25),
+                                           axis.title.y = element_text(size = 25),
+                                           axis.text.x = element_text(size = 20),
+                                           axis.text.y = element_text(size = 20),
+                                           legend.text = element_text(size = 20),
+                                           legend.title = element_blank(),
+                                           #legend.position = c(0.25, 0.85), #
+                                           legend.position = c(0.07, 0.95),
+                                           legend.background = element_rect(fill = "transparent", colour = "transparent"))
+
+work_boxplot.plot <- work_boxplot.plot + theme(panel.grid.minor = element_blank(),
+                                           panel.grid.major = element_blank()) +
+  labs(y = expression(paste("Work x", 10^{4})), x = "n") +
+  scale_color_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
+  scale_fill_manual(values = c(opt_color, sn_color, dsn_color, bt_color)) +
+  scale_y_sqrt() +
+  guides(color = guide_legend(override.aes = list(size = 5)))
+
+plot(work_boxplot.plot)
+
+IMG_height = 15
+IMG_width = 15
+
+ggsave(filename = "./plots/bursty/work_boxplot.pdf", units = "cm",
+       plot = work_boxplot.table, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 

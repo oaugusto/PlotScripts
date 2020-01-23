@@ -7,10 +7,10 @@ import math
 
 projects = ["displaynet", "splaynet", "simplenet", "optnet"]
 numberOfNodes = [128, 256, 512, 1024]
-numberOfSimulations = 30
+numberOfSimulations = 5
 
-x = [0.4, 0.8, 1]
-y = [0.4, 0.8, 1]
+x = [0.2, 0.4, 0.8, 1]
+y = [0.2, 0.4, 0.8, 1]
 
 input_dir = "../../../Data/bursty"
 output_file = "../../csv_data/bursty/total_work.csv"
