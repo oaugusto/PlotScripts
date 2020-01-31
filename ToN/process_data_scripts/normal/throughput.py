@@ -9,7 +9,7 @@ numberOfNodes = [128, 1024]
 std_sim = [0.2, 0.8, 1.6, 3.2, 6.4]
 numberOfSimulations = 1
 
-input_dir = "../../raw_data/normal"
+input_dir = "../../../Data/normal"
 output_file = "../../csv_data/normal/throughput.csv"
 
 pr_file = open(output_file, "w")
@@ -18,7 +18,7 @@ pr_file.write("project,size,std,value\n")
 for project in projects:
     for n in numberOfNodes:
         for s in std_sim:
-            cluster_path = "{}/{}/{}/{}/throughput.txt".format(input_dir, project, n, s)
+            cluster_path = "{}/{}/{}/{}/1/throughput.txt".format(input_dir, project, n, s)
             
             with open(cluster_path) as f:
                 content = f.readlines()

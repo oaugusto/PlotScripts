@@ -14,10 +14,10 @@ theme_set(theme_bw())
 
 ############################# Reading tables  ##################################
 
-total_work.table <- read.csv("./data/csv_data/normal/total_work.csv")
-makespan.table <-read.csv("./data/csv_data/normal/total_time.csv")
-clusters.table <-read.csv("./data/csv_data/normal/cluster.csv")
-throughput.table <-read.csv("./data/csv_data/normal/throughput.csv")
+total_work.table <- read.csv("./csv_data/normal/total_work.csv")
+makespan.table <- read.csv("./csv_data/normal/total_time.csv")
+clusters.table <- read.csv("./csv_data/normal/cluster.csv")
+throughput.table <- read.csv("./csv_data/normal/throughput.csv")
 
 
 ############################# Define colors  ##################################
@@ -43,36 +43,44 @@ bt_color = "#555555"
 bt1 = "#555555"
 bt2 = "#555555"
 
+num_sim <- 1
+
 ############################# total work ##################################
 
 total_work.table["abb"] <- revalue(total_work.table$project, 
-                                   c("cbnet" = "cbn",
-                                     "splaynet" = "sn", 
-                                     "displaynet" = "dsn",
-                                     "optnet" = "opt",
-                                     "simplenet" = "bt"))
+                                   c("cbnet" = "CBN",
+                                     "splaynet" = "SN", 
+                                     "displaynet" = "DSN",
+                                     "optnet" = "OPT",
+                                     "simplenet" = "BT"))
 
-total_work.table$abb <- factor(total_work.table$abb, levels = c("opt", "cbn", "sn", "dsn", "bt"))
+total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "CBN", "SN", "DSN", "BT"))
+
+total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation" = "Rotation",
+                                                                       "routing" = "Routing"))
 
 total_work.table %>% filter(
-  operation %in% c("rotation", "routing")) -> operations.table
+  size %in% c(1024)) -> total_work.table
+
+total_work.table %>% filter(
+  operation %in% c("Rotation", "Routing")) -> operations.table
 
 total_work.table %>% filter(
   operation %in% c("total")) -> total.table
 
 total.table$operation <- revalue(total.table$operation,
-                                 c("total" = "rotation"))
+                                 c("total" = "Rotation"))
 
 # Init Ggplot Base Plot
-total_work.plot <- ggplot(operations.table, aes(x = abb, y = mean, fill = operation)) +
-  geom_bar(stat = "identity") +
+total_work.plot <- ggplot(operations.table, aes(x = abb, y = mean, fill = operation)) +#, col = abb)) +
+  geom_bar(position = "stack", stat = "identity", alpha = 0.8) +
   geom_errorbar(total.table, mapping = aes(x = abb, 
-                                           ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
-                                           ymax = mean + ((qnorm(0.975)*std)/sqrt(30))),
+                                           ymin = mean - ((qnorm(0.975)*std)/sqrt(num_sim)), 
+                                           ymax = mean + ((qnorm(0.975)*std)/sqrt(num_sim))),
                 width=.2,                    # Width of the error bars
                 position="identity",
                 colour = "#000000") +
-  facet_grid(size ~ std_par)
+  facet_grid(. ~ std_par)#, scales = 'free', space = 'free', nrow = 2)
 
 
 # Modify theme components -------------------------------------------
@@ -82,47 +90,62 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
                                            plot.caption = element_blank(),
                                            axis.title.x = element_blank(),
                                            axis.title.y = element_text(size = 25),
-                                           axis.text.x = element_text(size = 12),
+                                           axis.text.x = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
-                                           legend.text = element_text(size = 12),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.1, 0.9))
+                                           legend.position = c(0.095, 0.9))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{4}))) +
-  scale_fill_manual(values = c("#555555","#999999")) +
-  scale_y_continuous(breaks = seq(0, 200000, 20000), labels = function(x){paste0(x/10000)})
+  scale_color_manual(values = c(opt_color, cbn_color, sn_color, dsn_color, bt_color)) +
+  scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
+  scale_y_continuous(breaks = seq(0, 200000, 10000), labels = function(x){paste0(x/10000)}) #+
+#guides(color = FALSE)
+
+#ann_text <- data.frame(mean = 150000,lab = "Text",
+#                       cyl = factor(128,levels = c("128","256","512", "1024")))
+
+#total_work.plot <- total_work.plot +  geom_text(data = ann_text,label = "Text")
+
+# Create a text
+#grob <- grobTree(textGrob("OPT: StaticOPT\nCBN: CBNet\nSN: SplayNet\nDSN: DiSplayNet\nBT: Balanced Tree", 
+#                          x=0.65,  y=0.8, hjust=0,
+#                          gp=gpar(col="black", fontsize=14),
+#                          draw = c(TRUE, FALSE, FALSE, FALSE)))
+
+#total_work.plot <- total_work.plot + annotation_custom(grob)
 
 plot(total_work.plot)
 
-IMG_height = 7
-IMG_width = 15
+IMG_height = 15
+IMG_width = 40
 
 ggsave(filename = "./plots/normal/total_work.pdf", units = "cm",
-       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 2.0)
+       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
-############################# makespan  ##################################
+############################# makespan 1 ##################################
 
 
 makespan.table["abb"] <- revalue(makespan.table$project, 
-                                 c("cbnet" = "cbn",
-                                   "splaynet" = "sn", 
-                                   "displaynet" = "dsn"))
+                                 c("cbnet" = "CBN",
+                                   "splaynet" = "SN", 
+                                   "displaynet" = "DSN"))
 
-makespan.table$abb <- factor(makespan.table$abb, levels = c("cbn", "sn", "dsn"))
+makespan.table$abb <- factor(makespan.table$abb, levels = c("CBN", "DSN", "SN"))
 
 makespan.table$size <- as.factor(makespan.table$size)
 
+makespan.table %>% filter(
+  size %in% c(1024)) -> makespan.table
+
 # Init Ggplot Base Plot
-makespan.plot <- ggplot(makespan.table, aes(x = size, y = mean, group = abb, color = abb)) +
-  geom_line(size = 1.5) +
-  geom_point(aes(shape = abb), size=3, fill="white") +
-  geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(30)), 
-                    ymax = mean + ((qnorm(0.975)*std)/sqrt(30)) ), 
-                width=.2,
-                position="identity") +
+makespan.plot <- ggplot(makespan.table, aes(x = abb, y = mean, fill = abb)) +
+  geom_bar(stat = "identity", position=position_dodge(), alpha = 0.8) +
+  geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(num_sim)), 
+                    ymax = mean + ((qnorm(0.975)*std)/sqrt(num_sim)) ), 
+                width=.2) +
   facet_grid(. ~ std_par)
 
 # Modify theme components -------------------------------------------
@@ -130,43 +153,48 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
-                                       axis.title.x = element_text(size = 25),
+                                       axis.title.x = element_blank(),
                                        axis.title.y = element_text(size = 25),
                                        axis.text.x = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
-                                       legend.text = element_text(size = 16),
+                                       legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.1, 0.85))
+                                       legend.position = c(0.1, 0.87))
 
 makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank()) +
-  labs(x = "#Nodes", y = expression(paste("#Rounds x ", 10^{4}))) +
-  scale_color_manual(values = c(cbn_color, sn_color, dsn_color)) +
-  scale_y_continuous(labels = function(x){paste0(x/10000)})
+  labs(x = "n", y = expression(paste("#Rounds x ", 10^{4}))) +
+  scale_color_manual(values = c(cbn_color, dsn_color, sn_color)) +
+  scale_fill_manual(values = c(cbn_color, dsn_color, sn_color)) +
+  scale_y_continuous(limits = c(0, 80000), breaks = seq(0, 80000, 10000), labels = function(x){paste0(x/10000)}) +
+  guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
 
-IMG_height = 7
-IMG_width = 15
+IMG_height = 15
+IMG_width = 40
 
 ggsave(filename = "./plots/normal/makespan.pdf", units = "cm",
-       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 2.0)
+       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# throughput  ##################################
 
 
 throughput.table["abb"] <- revalue(throughput.table$project, 
-                                   c("cbnet" = "cbn",
-                                     "splaynet" = "sn", 
-                                     "displaynet" = "dsn"))
+                                   c("cbnet" = "CBN",
+                                     "splaynet" = "SN", 
+                                     "displaynet" = "DSN"))
 
-throughput.table$abb <- factor(throughput.table$abb, levels = c("cbn", "sn", "dsn"))
+throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN", "SN", "DSN"))
+
+
+throughput.table %>% filter(
+  size %in% c(1024)) -> throughput.table
 
 # Init Ggplot Base Plot
 throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
-  geom_density(aes(y = ..count..), alpha = 0.5) +
-  facet_grid(size ~ std)
+  geom_density(aes(y = ..count..), alpha = 0.5) 
 
 # Modify theme components -------------------------------------------
 throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
@@ -174,44 +202,51 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
                                            axis.title.x = element_text(size = 25),
-                                           axis.title.y = element_text(size = 20),
+                                           axis.title.y = element_text(size = 25),
                                            axis.text.x = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
-                                           legend.text = element_text(size = 12),
+                                           legend.text = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.15, 0.8))
+                                           legend.position = c(0.95, 0.8)) +
+  facet_grid(. ~ std)
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = expression(paste("Time (rounds)", 10^3)), y = "Requests completed (per round)") +
+  labs(x = expression(paste("Time (rounds)", 10^3)), y = "Requests completed per round") +
   scale_fill_manual(values = c(cbn_color, sn_color, dsn_color)) +
   scale_x_continuous(labels = function(x){paste0(x/1000)})
 
 plot(throughput.plot)
 
-IMG_height = 7
-IMG_width = 15
+IMG_height = 15
+IMG_width = 40
 
 ggsave(filename = "./plots/normal/throughput.pdf", units = "cm",
-       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 2.0)
+       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
 
 
 ############################# cluster ##################################
 
 
 clusters.table["abb"] <- revalue(clusters.table$project, 
-                                 c("cbnet" = "cbn",
-                                   "splaynet" = "sn", 
-                                   "displaynet" = "dsn"))
+                                 c("cbnet" = "CBN",
+                                   "splaynet" = "SN", 
+                                   "displaynet" = "DSN"))
 
-clusters.table$abb <- factor(clusters.table$abb, levels = c("cbn", "sn", "dsn"))
+clusters.table$abb <- factor(clusters.table$abb, levels = c("CBN", "SN", "DSN"))
+
+clusters.table %>% filter(
+  size %in% c(1024)) -> clusters.table
+
+clusters.table %>% filter(
+  abb %in% c("CBN")) -> clusters.table
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1) +
-  # Add mean line
-  geom_vline(aes(xintercept=mean(value)), linetype="dashed") +
-  facet_grid( size ~ std)
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
+  facet_grid(. ~ std)
+# Add mean line
+#geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
 # Modify theme components -------------------------------------------
 clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
@@ -219,24 +254,24 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
                                        axis.title.x = element_text(size = 25),
-                                       axis.title.y = element_text(size = 20),
+                                       axis.title.y = element_text(size = 25),
                                        axis.text.x = element_text(size = 20),
-                                       axis.text.y = element_text(size = 12),
-                                       legend.text = element_text(size = 12),
+                                       axis.text.y = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.15, 0.82),
+                                       legend.position = "none",
                                        panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank())
 
 clusters.plot <- clusters.plot + 
-  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^4))) +
-  scale_fill_manual(values = c(cbn_color, sn_color, dsn_color)) +
-  scale_y_continuous(breaks = seq(0, 400000, 10000), labels = function(x){paste0(x/10000)})
+  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
+  scale_fill_manual(values = c(sn_color, dsn_color)) +
+  scale_y_continuous(lim = c(0, 15000), breaks = seq(0, 15000, 2000), labels = function(x){paste0(x/1000)}) #+
+#coord_cartesian(xlim = c(0, 10))
 
 plot(clusters.plot)
 
-IMG_height = 7
-IMG_width = 15
+IMG_height = 15
+IMG_width = 40
 
 ggsave(filename = "./plots/normal/clusters.pdf", units = "cm",
-       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 2.0)
+       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)

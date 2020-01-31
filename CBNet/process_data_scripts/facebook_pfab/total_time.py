@@ -39,6 +39,6 @@ for project in projects:
 
     value = int(first_line.strip())
 
-    pr_file.write("{},{},{}\n".format(project, dataset, value))
+    pr_file.write("{},{},{}\n".format(project, "facebook", value))
 
 pr_file.close()

@@ -41,6 +41,6 @@ for project in projects:
         content = [int(x.strip()) for x in content]
         
         for value in content:
-            pr_file.write("{},{},{}\n".format(project, dataset, value))
+            pr_file.write("{},{},{}\n".format(project, "facebook", value))
         
 pr_file.close()

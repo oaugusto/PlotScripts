@@ -56,7 +56,7 @@ for project in projects:
     content = [int(x.strip()) for x in content]
     routing = sum(content)
 
-    pr_file.write("{},{},{},{}\n".format(project, dataset, "rotation", rotation))
-    pr_file.write("{},{},{},{}\n".format(project, dataset, "routing", routing))
+    pr_file.write("{},{},{},{}\n".format(project, "facebook", "rotation", rotation))
+    pr_file.write("{},{},{},{}\n".format(project, "facebook", "routing", routing))
 
 pr_file.close()

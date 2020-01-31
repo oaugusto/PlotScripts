@@ -9,7 +9,7 @@ numberOfNodes = [128, 1024]
 std_sim = [0.2, 0.8, 1.6, 3.2, 6.4]
 numberOfSimulations = 1
 
-input_dir = "../../raw_data/normal"
+input_dir = "../../../Data/normal"
 output_file = "../../csv_data/normal/total_time.csv"
 
 pr_file = open(output_file, "w")
@@ -22,7 +22,7 @@ for project in projects:
             time = []
 
             for i in range(1, numberOfSimulations + 1):
-                total_time_path = "{}/{}/{}/{}/total_time.txt".format(input_dir, project, n, s)
+                total_time_path = "{}/{}/{}/{}/1/total_time.txt".format(input_dir, project, n, s)
 
                 with open(total_time_path) as f:
                     first_line = f.readline()

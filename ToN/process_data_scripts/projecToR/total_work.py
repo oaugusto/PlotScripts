@@ -7,9 +7,9 @@ import math
 
 projects = ["displaynet", "splaynet", "simplenet", "optnet"]
 numberOfNodes = [128, 256, 512, 1024]
-numberOfSimulations = 30
+numberOfSimulations = 10
 
-input_dir = "../../../Data/projector"
+input_dir = "../../../Data/projector/newTor"
 output_file = "../../csv_data/projector/total_work.csv"
 
 pr_file = open(output_file, "w")
