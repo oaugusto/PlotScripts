@@ -4,7 +4,7 @@ import sys
 import os
 import numpy
 
-projects = ["cbnet", "displaynet", "splaynet"]
+projects = ["cbnet", "seqcbnet", "displaynet", "splaynet"]
 numberOfNodes = [128, 256, 512, 1024]
 numberOfSimulations = 10
 

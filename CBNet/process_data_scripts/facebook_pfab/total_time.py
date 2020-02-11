@@ -10,7 +10,7 @@ output_file = "../../csv_data/facebook_pfab/total_time.csv"
 pr_file = open(output_file, "w")
 pr_file.write("project,dataset,value\n")
 
-projects = ["cbnet", "displaynet", "splaynet"]
+projects = ["cbnet", "seqcbnet", "displaynet", "splaynet"]
 datasets = ["trace_0_1", "trace_0_5", "trace_0_8"]
 
 input_dir = "../../../Data/pfab"
@@ -27,7 +27,7 @@ for project in projects:
 
         pr_file.write("{},{},{}\n".format(project, dataset, value))
 
-projects = ["cbnet", "displaynet", "splaynet"]
+projects = ["cbnet", "seqcbnet", "displaynet", "splaynet"]
 input_dir = "../../../Data/facebook"
 
 for project in projects:

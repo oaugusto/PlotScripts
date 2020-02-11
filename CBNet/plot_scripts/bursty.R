@@ -12,6 +12,8 @@ library(plyr)
 options(scipen = 999)
 theme_set(theme_bw())
 
+scale_imgs <- 1.1
+
 ############################# Reading tables  ##################################
 
 total_work.table <- read.csv("./csv_data/bursty/total_work.csv")
@@ -25,6 +27,10 @@ throughput.table <- read.csv("./csv_data/bursty/throughput.csv")
 cbn_color = "#325387"
 cbn1 = "#325387"
 cbn2 = "#325387"
+
+scbn_color = "#6C5B7B"
+scbn1 = "#6C5B7B"
+scbn2 = "#6C5B7B"
 
 sn_color = "#021C02"
 sn1 = "#1A361A"
@@ -42,18 +48,32 @@ bt_color = "#555555"
 bt1 = "#555555"
 bt2 = "#555555"
 
+############################# Define imgs paremeters ######################
+
+scale_imgs <- 1
+
+IMG_height = 15
+IMG_width = 40
+
+text_size <- 35
+x_title_size <- 40
+y_title_size <- 40
+x_text_size <- 20
+y_text_size <- 35
+
 num_sim <- 10
 
 ############################# total work ##################################
 
 total_work.table["abb"] <- revalue(total_work.table$project, 
                                    c("cbnet" = "CBN",
+                                     "seqcbnet" = "SCBN",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN",
                                      "optnet" = "OPT",
                                      "simplenet" = "BT"))
 
-total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "CBN", "SN", "DSN", "BT"))
+total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCBN", "CBN", "SN", "DSN", "BT"))
 
 total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation" = "Rotation",
                                                                        "routing" = "Routing"))
@@ -80,7 +100,7 @@ total_work.plot <- ggplot(operations.table, aes(x = abb, y = mean, fill = operat
 
 
 # Modify theme components -------------------------------------------
-total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
+total_work.plot <- total_work.plot + theme(text = element_text(size = 25),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
@@ -89,14 +109,14 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
                                            axis.text.x = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.095, 0.8))
+                                           legend.position = c(0.06, 0.85))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{4}))) +
-  scale_color_manual(values = c(opt_color, cbn_color, sn_color, dsn_color, bt_color)) +
+  scale_color_manual(values = c(opt_color, scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_y_continuous(breaks = seq(0, 200000, 10000), labels = function(x){paste0(x/10000)}) #+
+  scale_y_continuous(breaks = seq(0, 200000, 20000), labels = function(x){paste0(x/10000)}) #+
 #guides(color = FALSE)
 
 #ann_text <- data.frame(mean = 150000,lab = "Text",
@@ -114,11 +134,11 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
 
 plot(total_work.plot)
 
-IMG_height = 15
+IMG_height = 12
 IMG_width = 40
 
-ggsave(filename = "./plots/bursty/total_work.pdf", units = "cm",
-       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+ggsave(filename = "./plots/bursty/total_work.png", units = "cm",
+       plot = total_work.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
 ############################# makespan 1 ##################################
@@ -126,10 +146,11 @@ ggsave(filename = "./plots/bursty/total_work.pdf", units = "cm",
 
 makespan.table["abb"] <- revalue(makespan.table$project, 
                                  c("cbnet" = "CBN",
+                                   "seqcbnet" = "SCBN",
                                    "splaynet" = "SN", 
                                    "displaynet" = "DSN"))
 
-makespan.table$abb <- factor(makespan.table$abb, levels = c("CBN", "DSN", "SN"))
+makespan.table$abb <- factor(makespan.table$abb, levels = c("CBN", "SCBN", "DSN", "SN"))
 
 makespan.table$size <- as.factor(makespan.table$size)
 
@@ -142,7 +163,7 @@ makespan.plot <- ggplot(makespan.table, aes(x = abb, y = mean, fill = abb)) +
   facet_grid(. ~ size)
 
 # Modify theme components -------------------------------------------
-makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
+makespan.plot <- makespan.plot + theme(text = element_text(size = 25),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
@@ -152,23 +173,23 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
                                        axis.text.y = element_text(size = 20),
                                        legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
-                                       legend.position = c(0.15, 0.75))
+                                       legend.position = c(0.05, 0.83))
 
 makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank()) +
   labs(x = "n", y = expression(paste("#Rounds x ", 10^{4}))) +
-  scale_color_manual(values = c(cbn_color, dsn_color, sn_color)) +
-  scale_fill_manual(values = c(cbn_color, dsn_color, sn_color)) +
-  scale_y_continuous(limits = c(0, 80000), breaks = seq(0, 80000, 10000), labels = function(x){paste0(x/10000)}) +
+  scale_color_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
+  scale_fill_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
+  scale_y_continuous(limits = c(0, 90000), breaks = seq(0, 90000, 10000), labels = function(x){paste0(x/10000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
 
-IMG_height = 15
+IMG_height = 12
 IMG_width = 40
 
-ggsave(filename = "./plots/bursty/makespan.pdf", units = "cm",
-       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+ggsave(filename = "./plots/bursty/makespan.png", units = "cm",
+       plot = makespan.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
 ############################# throughput  ##################################
@@ -176,10 +197,11 @@ ggsave(filename = "./plots/bursty/makespan.pdf", units = "cm",
 
 throughput.table["abb"] <- revalue(throughput.table$project, 
                                    c("cbnet" = "CBN",
+                                     "seqcbnet" = "SCBN",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN"))
 
-throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN", "SN", "DSN"))
+throughput.table$abb <- factor(throughput.table$abb, levels = c("SCBN", "CBN", "SN", "DSN"))
 
 
 #throughput.table %>% filter(
@@ -190,7 +212,7 @@ throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
   geom_density(aes(y = ..count..), alpha = 0.5) 
 
 # Modify theme components -------------------------------------------
-throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
+throughput.plot <- throughput.plot + theme(text = element_text(size = 25),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
@@ -205,17 +227,18 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = expression(paste("Time (rounds)", 10^3)), y = "Requests completed per round") +
-  scale_fill_manual(values = c(cbn_color, sn_color, dsn_color)) +
-  scale_x_continuous(labels = function(x){paste0(x/1000)})
+  labs(x = expression(paste("Time (rounds)", 10^4)), y = "Requests completed per round") +
+  scale_fill_manual(values = c(scbn_color, cbn_color, sn_color, dsn_color)) +
+  scale_y_continuous(breaks = seq(0, 5, 0.1)) +
+  scale_x_continuous(labels = function(x){paste0(x/10000)})
 
 plot(throughput.plot)
 
-IMG_height = 15
+IMG_height = 12
 IMG_width = 40
 
-ggsave(filename = "./plots/bursty/throughput.pdf", units = "cm",
-       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+ggsave(filename = "./plots/bursty/throughput.png", units = "cm",
+       plot = throughput.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
 ############################# cluster ##################################
@@ -223,10 +246,11 @@ ggsave(filename = "./plots/bursty/throughput.pdf", units = "cm",
 
 clusters.table["abb"] <- revalue(clusters.table$project, 
                                  c("cbnet" = "CBN",
+                                   "seqcbnet" = "SCBN",
                                    "splaynet" = "SN", 
                                    "displaynet" = "DSN"))
 
-clusters.table$abb <- factor(clusters.table$abb, levels = c("CBN", "SN", "DSN"))
+clusters.table$abb <- factor(clusters.table$abb, levels = c("SCBN", "CBN", "SN", "DSN"))
 
 #clusters.table %>% filter(
 #  size %in% c(1024)) -> clusters.table
@@ -242,7 +266,7 @@ clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
 #geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
 # Modify theme components -------------------------------------------
-clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
+clusters.plot <- clusters.plot + theme(text = element_text(size = 25),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
@@ -263,8 +287,8 @@ clusters.plot <- clusters.plot +
 
 plot(clusters.plot)
 
-IMG_height = 15
+IMG_height = 12
 IMG_width = 40
 
-ggsave(filename = "./plots/bursty/clusters.pdf", units = "cm",
-       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+ggsave(filename = "./plots/bursty/clusters.png", units = "cm",
+       plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)

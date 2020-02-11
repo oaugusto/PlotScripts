@@ -27,6 +27,10 @@ cbn_color = "#325387"
 cbn1 = "#325387"
 cbn2 = "#325387"
 
+scbn_color = "#6C5B7B"
+scbn1 = "#6C5B7B"
+scbn2 = "#6C5B7B"
+
 sn_color = "#021C02"
 sn1 = "#1A361A"
 sn2 = "#021C02"
@@ -43,16 +47,30 @@ bt_color = "#555555"
 bt1 = "#555555"
 bt2 = "#555555"
 
+############################# Define imgs paremeters ######################
+
+scale_imgs <- 1
+
+IMG_height = 15
+IMG_width = 40
+
+text_size <- 35
+x_title_size <- 40
+y_title_size <- 40
+x_text_size <- 20
+y_text_size <- 35
+
 ############################# total work ##################################
 
 total_work.table["abb"] <- revalue(total_work.table$project, 
                                    c("cbnet" = "CBN",
+                                     "seqcbnet" = "SCB",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN",
                                      "optnet" = "OPT",
                                      "simplenet" = "BT"))
 
-total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "CBN", "SN", "DSN", "BT"))
+total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCB", "CBN", "SN", "DSN", "BT"))
 
 total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation" = "Rotation",
                                                                        "routing" = "Routing"))
@@ -67,7 +85,7 @@ total_work.plot <- ggplot(operations.table, aes(x = abb, y = value, fill = opera
 
 
 # Modify theme components -------------------------------------------
-total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
+total_work.plot <- total_work.plot + theme(text = element_text(size = 25),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
@@ -76,14 +94,14 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = 20),
                                            axis.text.x = element_text(size = 20),
                                            axis.text.y = element_text(size = 20),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.3, 0.9))
+                                           legend.position = c(0.18, 0.88))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{4}))) +
-  scale_color_manual(values = c(opt_color, cbn_color, sn_color, dsn_color, bt_color)) +
+  scale_color_manual(values = c(opt_color, scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_y_continuous(breaks = seq(0, 20000000, 1000000), labels = function(x){paste0(x/1000000)}) #+
+  scale_y_continuous(breaks = seq(0, 20000000, 2000000), labels = function(x){paste0(x/1000000)}) #+
 #guides(color = FALSE)
 
 #ann_text <- data.frame(mean = 150000,lab = "Text",
@@ -101,11 +119,11 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
 
 plot(total_work.plot)
 
-IMG_height = 15
+IMG_height = 12
 IMG_width = 40
 
-ggsave(filename = "./plots/hpc/total_work.pdf", units = "cm",
-       plot = total_work.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+ggsave(filename = "./plots/hpc/total_work.png", units = "cm",
+       plot = total_work.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
 ############################# makespan 1 ##################################
@@ -113,10 +131,11 @@ ggsave(filename = "./plots/hpc/total_work.pdf", units = "cm",
 
 makespan.table["abb"] <- revalue(makespan.table$project, 
                                  c("cbnet" = "CBN",
+                                   "seqcbnet" = "SCB",
                                    "splaynet" = "SN", 
                                    "displaynet" = "DSN"))
 
-makespan.table$abb <- factor(makespan.table$abb, levels = c("CBN", "DSN", "SN"))
+makespan.table$abb <- factor(makespan.table$abb, levels = c("CBN", "SCB", "DSN", "SN"))
 
 # Init Ggplot Base Plot
 makespan.plot <- ggplot(makespan.table, aes(x = abb, y = value, fill = abb)) +
@@ -124,7 +143,7 @@ makespan.plot <- ggplot(makespan.table, aes(x = abb, y = value, fill = abb)) +
   facet_grid(. ~ dataset)
 
 # Modify theme components -------------------------------------------
-makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
+makespan.plot <- makespan.plot + theme(text = element_text(size = 25),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
@@ -139,18 +158,18 @@ makespan.plot <- makespan.plot + theme(text = element_text(size = 20),
 makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank()) +
   labs(x = "n", y = expression(paste("#Rounds x ", 10^{6}))) +
-  scale_color_manual(values = c(cbn_color, dsn_color, sn_color)) +
-  scale_fill_manual(values = c(cbn_color, dsn_color, sn_color)) +
-  scale_y_continuous(limits = c(0, 8000000), breaks = seq(0, 8000000, 1000000), labels = function(x){paste0(x/1000000)}) +
+  scale_color_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
+  scale_fill_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
+  scale_y_continuous(limits = c(0, 9000000), breaks = seq(0, 9000000, 1000000), labels = function(x){paste0(x/1000000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
 
-IMG_height = 15
+IMG_height = 12
 IMG_width = 40
 
-ggsave(filename = "./plots/hpc/makespan.pdf", units = "cm",
-       plot = makespan.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+ggsave(filename = "./plots/hpc/makespan.png", units = "cm",
+       plot = makespan.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
 ############################# throughput  ##################################
@@ -158,10 +177,11 @@ ggsave(filename = "./plots/hpc/makespan.pdf", units = "cm",
 
 throughput.table["abb"] <- revalue(throughput.table$project, 
                                    c("cbnet" = "CBN",
+                                     "seqcbnet" = "SCB",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN"))
 
-throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN", "SN", "DSN"))
+throughput.table$abb <- factor(throughput.table$abb, levels = c("SCB", "CBN", "SN", "DSN"))
 
 
 # Init Ggplot Base Plot
@@ -169,7 +189,7 @@ throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
   geom_density(aes(y = ..count..), alpha = 0.5) 
 
 # Modify theme components -------------------------------------------
-throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
+throughput.plot <- throughput.plot + theme(text = element_text(size = 25),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
@@ -184,17 +204,18 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = 20),
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = expression(paste("Time (rounds)", 10^3)), y = "Requests completed per round") +
-  scale_fill_manual(values = c(cbn_color, sn_color, dsn_color)) +
-  scale_x_continuous(labels = function(x){paste0(x/1000)})
+  labs(x = expression(paste("Time (rounds)", 10^6)), y = "Requests completed per round") +
+  scale_fill_manual(values = c(scbn_color, cbn_color, sn_color, dsn_color)) +
+  scale_y_continuous(breaks = seq(0, 5, 0.1)) +
+  scale_x_continuous(labels = function(x){paste0(x/1000000)})
 
 plot(throughput.plot)
 
-IMG_height = 15
+IMG_height = 12
 IMG_width = 40
 
-ggsave(filename = "./plots/hpc/throughput.pdf", units = "cm",
-       plot = throughput.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+ggsave(filename = "./plots/hpc/throughput.png", units = "cm",
+       plot = throughput.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
 ############################# cluster ##################################
@@ -202,10 +223,11 @@ ggsave(filename = "./plots/hpc/throughput.pdf", units = "cm",
 
 clusters.table["abb"] <- revalue(clusters.table$project, 
                                  c("cbnet" = "CBN",
+                                   "seqcbnet" = "SCB",
                                    "splaynet" = "SN", 
                                    "displaynet" = "DSN"))
 
-clusters.table$abb <- factor(clusters.table$abb, levels = c("CBN", "SN", "DSN"))
+clusters.table$abb <- factor(clusters.table$abb, levels = c("SCB", "CBN", "SN", "DSN"))
 
 clusters.table %>% filter(
   abb %in% c("CBN")) -> clusters.table
@@ -218,7 +240,7 @@ clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
 #geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
 # Modify theme components -------------------------------------------
-clusters.plot <- clusters.plot + theme(text = element_text(size = 20),
+clusters.plot <- clusters.plot + theme(text = element_text(size = 25),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
@@ -239,8 +261,8 @@ clusters.plot <- clusters.plot +
 
 plot(clusters.plot)
 
-IMG_height = 15
+IMG_height = 12
 IMG_width = 40
 
-ggsave(filename = "./plots/hpc/clusters.pdf", units = "cm",
-       plot = clusters.plot, device = "pdf",  width = IMG_width, height = IMG_height, scale = 1.0)
+ggsave(filename = "./plots/hpc/clusters.png", units = "cm",
+       plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
