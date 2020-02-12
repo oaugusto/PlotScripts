@@ -1,5 +1,5 @@
 #setwd("C:/Users/oaugusto/Desktop/Plots/CBNet")
-setwd("/home/oaugusto/CBNet/PlotsScripts/CBNet")
+setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
 
 ################################## Libraries ###################################
 
@@ -11,8 +11,6 @@ library(plyr)
 # setup
 options(scipen = 999)
 theme_set(theme_bw())
-
-scale_imgs <- 1.1
 
 ############################# Reading tables  ##################################
 
@@ -54,13 +52,13 @@ bt2 = "#555555"
 scale_imgs <- 1
 
 IMG_height = 15
-IMG_width = 40
+IMG_width = 20
 
-text_size <- 35
-x_title_size <- 40
-y_title_size <- 40
-x_text_size <- 20
-y_text_size <- 35
+text_size <- 30
+x_title_size <- 25
+y_title_size <- 25
+x_text_size <- 25
+y_text_size <- 25
 
 num_sim <- 1
 
@@ -82,6 +80,10 @@ total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation
 total_work.table %>% filter(
   size %in% c(1024)) -> total_work.table
 
+
+total_work.table %>% filter(
+  std_par %in% c(1.6)) -> total_work.table
+
 total_work.table %>% filter(
   operation %in% c("Rotation", "Routing")) -> operations.table
 
@@ -93,27 +95,27 @@ total.table$operation <- revalue(total.table$operation,
 
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(operations.table, aes(x = abb, y = mean, fill = operation)) +#, col = abb)) +
-  geom_bar(position = "stack", stat = "identity", alpha = 0.8) +
-  geom_errorbar(total.table, mapping = aes(x = abb, 
-                                           ymin = mean - ((qnorm(0.975)*std)/sqrt(num_sim)), 
-                                           ymax = mean + ((qnorm(0.975)*std)/sqrt(num_sim))),
-                width=.2,                    # Width of the error bars
-                position="identity",
-                colour = "#000000") +
-  facet_grid(. ~ std_par)#, scales = 'free', space = 'free', nrow = 2)
+  geom_bar(position = "stack", stat = "identity", alpha = 0.8) #+
+  #geom_errorbar(total.table, mapping = aes(x = abb, 
+  #                                         ymin = mean - ((qnorm(0.975)*std)/sqrt(num_sim)), 
+  #                                         ymax = mean + ((qnorm(0.975)*std)/sqrt(num_sim))),
+  #              width=.2,                    # Width of the error bars
+  #              position="identity",
+  #              colour = "#000000") #+
+  #facet_grid(. ~ std_par)#, scales = 'free', space = 'free', nrow = 2)
 
 
 # Modify theme components -------------------------------------------
-total_work.plot <- total_work.plot + theme(text = element_text(size = 25),
+total_work.plot <- total_work.plot + theme(text = element_text(size = text_size),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
                                            axis.title.x = element_blank(),
-                                           axis.title.y = element_text(size = 25),
-                                           axis.text.x = element_text(size = 20),
-                                           axis.text.y = element_text(size = 20),
+                                           axis.title.y = element_text(size = y_title_size),
+                                           axis.text.x = element_text(size = x_text_size),
+                                           axis.text.y = element_text(size = y_text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.06, 0.85))
+                                           legend.position = c(0.15, 0.9))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -137,9 +139,6 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
 #total_work.plot <- total_work.plot + annotation_custom(grob)
 
 plot(total_work.plot)
-
-IMG_height = 12
-IMG_width = 40
 
 ggsave(filename = "./plots/normal/total_work.png", units = "cm",
        plot = total_work.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
@@ -192,9 +191,6 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
 
 plot(makespan.plot)
 
-IMG_height = 12
-IMG_width = 40
-
 ggsave(filename = "./plots/normal/makespan.png", units = "cm",
        plot = makespan.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
@@ -214,23 +210,26 @@ throughput.table$abb <- factor(throughput.table$abb, levels = c("SCB", "CBN", "S
 throughput.table %>% filter(
   size %in% c(1024)) -> throughput.table
 
+throughput.table %>% filter(
+  std %in% c(1.6)) -> throughput.table
+
 # Init Ggplot Base Plot
 throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
   geom_density(aes(y = ..count..), alpha = 0.5) 
 
 # Modify theme components -------------------------------------------
-throughput.plot <- throughput.plot + theme(text = element_text(size = 25),
+throughput.plot <- throughput.plot + theme(text = element_text(size = text_size),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
-                                           axis.title.x = element_text(size = 25),
-                                           axis.title.y = element_text(size = 25),
-                                           axis.text.x = element_text(size = 20),
-                                           axis.text.y = element_text(size = 20),
-                                           legend.text = element_text(size = 20),
+                                           axis.title.x = element_text(size = x_title_size),
+                                           axis.title.y = element_text(size = y_title_size),
+                                           axis.text.x = element_text(size = x_text_size),
+                                           axis.text.y = element_text(size = y_text_size),
+                                           legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.95, 0.8)) +
-  facet_grid(. ~ std)
+                                           legend.position = c(0.8, 0.7)) #+
+  #facet_grid(. ~ std)
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -241,8 +240,6 @@ throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
 
 plot(throughput.plot)
 
-IMG_height = 12
-IMG_width = 40
 
 ggsave(filename = "./plots/normal/throughput.png", units = "cm",
        plot = throughput.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
@@ -263,12 +260,15 @@ clusters.table %>% filter(
   size %in% c(1024)) -> clusters.table
 
 clusters.table %>% filter(
+  std %in% c(1.6)) -> clusters.table
+
+clusters.table %>% filter(
   abb %in% c("CBN")) -> clusters.table
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
-  facet_grid(. ~ std)
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") #+
+  #facet_grid(. ~ std)
 # Add mean line
 #geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
@@ -277,10 +277,10 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 25),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
-                                       axis.title.x = element_text(size = 25),
-                                       axis.title.y = element_text(size = 25),
-                                       axis.text.x = element_text(size = 20),
-                                       axis.text.y = element_text(size = 20),
+                                       axis.title.x = element_text(size = x_title_size),
+                                       axis.title.y = element_text(size = y_title_size),
+                                       axis.text.x = element_text(size = x_text_size),
+                                       axis.text.y = element_text(size = y_text_size),
                                        legend.title = element_blank(),
                                        legend.position = "none",
                                        panel.grid.minor = element_blank(),
@@ -293,9 +293,6 @@ clusters.plot <- clusters.plot +
 #coord_cartesian(xlim = c(0, 10))
 
 plot(clusters.plot)
-
-IMG_height = 12
-IMG_width = 40
 
 ggsave(filename = "./plots/normal/clusters.png", units = "cm",
        plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)

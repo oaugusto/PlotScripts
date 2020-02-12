@@ -14,10 +14,10 @@ theme_set(theme_bw())
 
 ############################# Reading tables  ##################################
 
-total_work.table <- read.csv("./csv_data/hpc/total_work.csv")
-makespan.table <- read.csv("./csv_data/hpc/total_time.csv")
-clusters.table <- read.csv("./csv_data/hpc/cluster.csv")
-throughput.table <- read.csv("./csv_data/hpc/throughput.csv")
+total_work.table <- read.csv("./csv_data/facebook_pfab/total_work.csv")
+makespan.table <- read.csv("./csv_data/facebook_pfab/total_time.csv")
+clusters.table <- read.csv("./csv_data/facebook_pfab/cluster.csv")
+throughput.table <- read.csv("./csv_data/facebook_pfab/throughput.csv")
 
 
 ############################# Define colors  ##################################
@@ -76,12 +76,16 @@ total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation
                                                                        "routing" = "Routing"))
 
 total_work.table %>% filter(
+  dataset %in% c("facebook")) -> total_work.table
+
+total_work.table %>% filter(
   operation %in% c("Rotation", "Routing")) -> operations.table
+
 
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(operations.table, aes(x = abb, y = value, fill = operation)) +#, col = abb)) +
-  geom_bar(position = "stack", stat = "identity", alpha = 0.8) +
-  facet_grid(. ~ dataset)#, scales = 'free', space = 'free', nrow = 2)
+  geom_bar(position = "stack", stat = "identity", alpha = 0.8) #+
+  #facet_grid(. ~ dataset)#, scales = 'free', space = 'free', nrow = 2)
 
 
 # Modify theme components -------------------------------------------
@@ -94,18 +98,18 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = text_size)
                                            axis.text.x = element_text(size = x_text_size),
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.18, 0.88))
+                                           legend.position = c(0.1, 0.9))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(y = expression(paste("Work x", 10^{4}))) +
+  labs(y = expression(paste("Work x", 10^{6}))) +
   scale_color_manual(values = c(opt_color, scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_y_continuous(breaks = seq(0, 20000000, 2000000), labels = function(x){paste0(x/1000000)}) 
+  scale_y_continuous(breaks = seq(0, 15000000, 2000000), labels = function(x){paste0(x/1000000)}) 
 
 plot(total_work.plot)
 
-ggsave(filename = "./plots/hpc/total_work.png", units = "cm",
+ggsave(filename = "./plots/facebook_pfab/total_work.png", units = "cm",
        plot = total_work.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
@@ -126,15 +130,15 @@ makespan.plot <- ggplot(makespan.table, aes(x = abb, y = value, fill = abb)) +
   facet_grid(. ~ dataset)
 
 # Modify theme components -------------------------------------------
-makespan.plot <- makespan.plot + theme(text = element_text(size = text_size),
+makespan.plot <- makespan.plot + theme(text = element_text(size = 25),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
                                        axis.title.x = element_blank(),
-                                       axis.title.y = element_text(size = y_title_size),
-                                       axis.text.x = element_text(size = x_text_size),
-                                       axis.text.y = element_text(size = y_text_size),
-                                       legend.text = element_text(size = text_size),
+                                       axis.title.y = element_text(size = 25),
+                                       axis.text.x = element_text(size = 20),
+                                       axis.text.y = element_text(size = 20),
+                                       legend.text = element_text(size = 20),
                                        legend.title = element_blank(),
                                        legend.position = "none")#c(0.05, 0.85))
 
@@ -143,12 +147,12 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
   labs(x = "n", y = expression(paste("#Rounds x ", 10^{6}))) +
   scale_color_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
   scale_fill_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
-  scale_y_continuous(limits = c(0, 9000000), breaks = seq(0, 9000000, 1000000), labels = function(x){paste0(x/1000000)}) +
+  scale_y_continuous(limits = c(0, 8000000), breaks = seq(0, 8000000, 1000000), labels = function(x){paste0(x/1000000)}) +
   guides(color = guide_legend(override.aes = list(size = 5)))
 
 plot(makespan.plot)
 
-ggsave(filename = "./plots/hpc/makespan.png", units = "cm",
+ggsave(filename = "./plots/facebook_pfab/makespan.png", units = "cm",
        plot = makespan.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
@@ -162,6 +166,10 @@ throughput.table["abb"] <- revalue(throughput.table$project,
                                      "displaynet" = "DSN"))
 
 throughput.table$abb <- factor(throughput.table$abb, levels = c("SCB", "CBN", "SN", "DSN"))
+
+
+throughput.table %>% filter(
+  dataset %in% c("facebook")) -> throughput.table
 
 
 # Init Ggplot Base Plot
@@ -179,8 +187,8 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.95, 0.8)) +
-  facet_grid(. ~ dataset)
+                                           legend.position = c(0.85, 0.7)) #+
+  #facet_grid(. ~ dataset)
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -191,7 +199,7 @@ throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
 
 plot(throughput.plot)
 
-ggsave(filename = "./plots/hpc/throughput.png", units = "cm",
+ggsave(filename = "./plots/facebook_pfab/throughput.png", units = "cm",
        plot = throughput.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
@@ -206,13 +214,19 @@ clusters.table["abb"] <- revalue(clusters.table$project,
 
 clusters.table$abb <- factor(clusters.table$abb, levels = c("SCB", "CBN", "SN", "DSN"))
 
+
+
+clusters.table %>% filter(
+  dataset %in% c("facebook")) -> clusters.table
+
+
 clusters.table %>% filter(
   abb %in% c("CBN")) -> clusters.table
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
-  facet_grid(. ~ dataset)
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") #+
+  #facet_grid(. ~ dataset)
 # Add mean line
 #geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
@@ -238,5 +252,5 @@ clusters.plot <- clusters.plot +
 
 plot(clusters.plot)
 
-ggsave(filename = "./plots/hpc/clusters.png", units = "cm",
+ggsave(filename = "./plots/facebook_pfab/clusters.png", units = "cm",
        plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)

@@ -1,5 +1,5 @@
 #setwd("C:/Users/oaugusto/Desktop/PlotScripts/ToN-bursty")
-setwd("/home/oaugusto/CBNet/PlotsScripts/CBNet")
+setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
 
 ################################## Libraries ###################################
 
@@ -11,8 +11,6 @@ library(plyr)
 # setup
 options(scipen = 999)
 theme_set(theme_bw())
-
-scale_imgs <- 1.1
 
 ############################# Reading tables  ##################################
 
@@ -53,13 +51,13 @@ bt2 = "#555555"
 scale_imgs <- 1
 
 IMG_height = 15
-IMG_width = 40
+IMG_width = 20
 
-text_size <- 35
-x_title_size <- 40
-y_title_size <- 40
-x_text_size <- 20
-y_text_size <- 35
+text_size <- 30
+x_title_size <- 25
+y_title_size <- 25
+x_text_size <- 25
+y_text_size <- 25
 
 num_sim <- 10
 
@@ -77,6 +75,8 @@ total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCBN", "
 
 total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation" = "Rotation",
                                                                        "routing" = "Routing"))
+total_work.table %>% filter(
+  size %in% c(1024)) -> total_work.table
 
 total_work.table %>% filter(
   operation %in% c("Rotation", "Routing")) -> operations.table
@@ -95,47 +95,30 @@ total_work.plot <- ggplot(operations.table, aes(x = abb, y = mean, fill = operat
                                            ymax = mean + ((qnorm(0.975)*std)/sqrt(num_sim))),
                 width=.2,                    # Width of the error bars
                 position="identity",
-                colour = "#000000") +
-  facet_grid(. ~ size)#, scales = 'free', space = 'free', nrow = 2)
+                colour = "#000000") #+
+  #facet_grid(. ~ size)#, scales = 'free', space = 'free', nrow = 2)
 
 
 # Modify theme components -------------------------------------------
-total_work.plot <- total_work.plot + theme(text = element_text(size = 25),
+total_work.plot <- total_work.plot + theme(text = element_text(size = text_size),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
                                            axis.title.x = element_blank(),
-                                           axis.title.y = element_text(size = 25),
-                                           axis.text.x = element_text(size = 20),
-                                           axis.text.y = element_text(size = 20),
+                                           axis.title.y = element_text(size = y_title_size),
+                                           axis.text.x = element_text(size = x_text_size),
+                                           axis.text.y = element_text(size = y_text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.06, 0.85))
+                                           legend.position = c(0.65, 0.85))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{4}))) +
   scale_color_manual(values = c(opt_color, scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_y_continuous(breaks = seq(0, 200000, 20000), labels = function(x){paste0(x/10000)}) #+
-#guides(color = FALSE)
-
-#ann_text <- data.frame(mean = 150000,lab = "Text",
-#                       cyl = factor(128,levels = c("128","256","512", "1024")))
-
-#total_work.plot <- total_work.plot +  geom_text(data = ann_text,label = "Text")
-
-# Create a text
-#grob <- grobTree(textGrob("OPT: StaticOPT\nCBN: CBNet\nSN: SplayNet\nDSN: DiSplayNet\nBT: Balanced Tree", 
-#                          x=0.65,  y=0.8, hjust=0,
-#                          gp=gpar(col="black", fontsize=14),
-#                          draw = c(TRUE, FALSE, FALSE, FALSE)))
-
-#total_work.plot <- total_work.plot + annotation_custom(grob)
+  scale_y_continuous(breaks = seq(0, 200000, 20000), labels = function(x){paste0(x/10000)}) 
 
 plot(total_work.plot)
-
-IMG_height = 12
-IMG_width = 40
 
 ggsave(filename = "./plots/bursty/total_work.png", units = "cm",
        plot = total_work.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
@@ -185,9 +168,6 @@ makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
 
 plot(makespan.plot)
 
-IMG_height = 12
-IMG_width = 40
-
 ggsave(filename = "./plots/bursty/makespan.png", units = "cm",
        plot = makespan.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
@@ -204,38 +184,35 @@ throughput.table["abb"] <- revalue(throughput.table$project,
 throughput.table$abb <- factor(throughput.table$abb, levels = c("SCBN", "CBN", "SN", "DSN"))
 
 
-#throughput.table %>% filter(
-#  size %in% c(1024)) -> throughput.table
+throughput.table %>% filter(
+  size %in% c(1024)) -> throughput.table
 
 # Init Ggplot Base Plot
 throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
   geom_density(aes(y = ..count..), alpha = 0.5) 
 
 # Modify theme components -------------------------------------------
-throughput.plot <- throughput.plot + theme(text = element_text(size = 25),
+throughput.plot <- throughput.plot + theme(text = element_text(size = text_size),
                                            plot.title = element_blank(),
                                            plot.subtitle = element_blank(),
                                            plot.caption = element_blank(),
-                                           axis.title.x = element_text(size = 25),
-                                           axis.title.y = element_text(size = 25),
-                                           axis.text.x = element_text(size = 20),
-                                           axis.text.y = element_text(size = 20),
-                                           legend.text = element_text(size = 20),
+                                           axis.title.x = element_text(size = x_title_size),
+                                           axis.title.y = element_text(size = y_title_size),
+                                           axis.text.x = element_text(size = x_text_size),
+                                           axis.text.y = element_text(size = y_text_size),
+                                           legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.95, 0.8)) +
-  facet_grid(. ~ size)
+                                           legend.position = c(0.85, 0.7)) #+
+  #facet_grid(. ~ size)
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = expression(paste("Time (rounds)", 10^4)), y = "Requests completed per round") +
+  labs(x = expression(paste("Time (rounds)", 10^4)), y = "Requests completed/round") +
   scale_fill_manual(values = c(scbn_color, cbn_color, sn_color, dsn_color)) +
   scale_y_continuous(breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/10000)})
 
 plot(throughput.plot)
-
-IMG_height = 12
-IMG_width = 40
 
 ggsave(filename = "./plots/bursty/throughput.png", units = "cm",
        plot = throughput.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
@@ -252,28 +229,28 @@ clusters.table["abb"] <- revalue(clusters.table$project,
 
 clusters.table$abb <- factor(clusters.table$abb, levels = c("SCBN", "CBN", "SN", "DSN"))
 
-#clusters.table %>% filter(
-#  size %in% c(1024)) -> clusters.table
+clusters.table %>% filter(
+  size %in% c(1024)) -> clusters.table
 
 clusters.table %>% filter(
   abb %in% c("CBN")) -> clusters.table
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
-  facet_grid(. ~ size)
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") #+
+  #facet_grid(. ~ size)
 # Add mean line
 #geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
 # Modify theme components -------------------------------------------
-clusters.plot <- clusters.plot + theme(text = element_text(size = 25),
+clusters.plot <- clusters.plot + theme(text = element_text(size = text_size),
                                        plot.title = element_blank(),
                                        plot.subtitle = element_blank(),
                                        plot.caption = element_blank(),
-                                       axis.title.x = element_text(size = 25),
-                                       axis.title.y = element_text(size = 25),
-                                       axis.text.x = element_text(size = 20),
-                                       axis.text.y = element_text(size = 20),
+                                       axis.title.x = element_text(size = x_title_size),
+                                       axis.title.y = element_text(size = y_title_size),
+                                       axis.text.x = element_text(size = x_text_size),
+                                       axis.text.y = element_text(size = y_text_size),
                                        legend.title = element_blank(),
                                        legend.position = "none",
                                        panel.grid.minor = element_blank(),
@@ -286,9 +263,6 @@ clusters.plot <- clusters.plot +
 #coord_cartesian(xlim = c(0, 10))
 
 plot(clusters.plot)
-
-IMG_height = 12
-IMG_width = 40
 
 ggsave(filename = "./plots/bursty/clusters.png", units = "cm",
        plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
