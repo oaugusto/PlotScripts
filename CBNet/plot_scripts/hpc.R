@@ -52,7 +52,7 @@ bt2 = "#555555"
 scale_imgs <- 1
 
 IMG_height = 15
-IMG_width = 20
+IMG_width = 40
 
 text_size <- 30
 x_title_size <- 25
@@ -74,6 +74,16 @@ total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCB", "C
 
 total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation" = "Rotation",
                                                                        "routing" = "Routing"))
+
+total_work.table["dataset"] <- revalue(total_work.table$dataset, 
+                                   c("cesar_mocfe" = "Mocfe",
+                                     "cesar_nekbone" = "Nekbone",
+                                     "cns_nospec" = "Nospec", 
+                                     "multigrid" = "Multigrid"))
+
+total_work.table %>% filter(
+  dataset %in% c("Mocfe", "Nekbone", "Multigrid")) -> total_work.table
+
 
 total_work.table %>% filter(
   operation %in% c("Rotation", "Routing")) -> operations.table
@@ -164,6 +174,16 @@ throughput.table["abb"] <- revalue(throughput.table$project,
 throughput.table$abb <- factor(throughput.table$abb, levels = c("SCB", "CBN", "SN", "DSN"))
 
 
+throughput.table["dataset"] <- revalue(throughput.table$dataset, 
+                                       c("cesar_mocfe" = "Mocfe",
+                                         "cesar_nekbone" = "Nekbone",
+                                         "cns_nospec" = "Nospec", 
+                                         "multigrid" = "Multigrid"))
+
+throughput.table %>% filter(
+  dataset %in% c("Mocfe", "Nekbone", "Multigrid")) -> throughput.table
+
+
 # Init Ggplot Base Plot
 throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
   geom_density(aes(y = ..count..), alpha = 0.5) 
@@ -179,7 +199,7 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.95, 0.8)) +
+                                           legend.position = c(0.9, 0.75)) +
   facet_grid(. ~ dataset)
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
@@ -205,6 +225,16 @@ clusters.table["abb"] <- revalue(clusters.table$project,
                                    "displaynet" = "DSN"))
 
 clusters.table$abb <- factor(clusters.table$abb, levels = c("SCB", "CBN", "SN", "DSN"))
+
+
+clusters.table["dataset"] <- revalue(clusters.table$dataset, 
+                                       c("cesar_mocfe" = "Mocfe",
+                                         "cesar_nekbone" = "Nekbone",
+                                         "cns_nospec" = "Nospec", 
+                                         "multigrid" = "Multigrid"))
+
+clusters.table %>% filter(
+  dataset %in% c("Mocfe", "Nekbone", "Multigrid")) -> clusters.table
 
 clusters.table %>% filter(
   abb %in% c("CBN")) -> clusters.table

@@ -51,7 +51,7 @@ bt2 = "#555555"
 
 scale_imgs <- 1
 
-IMG_height = 15
+IMG_height = 20
 IMG_width = 20
 
 text_size <- 30
@@ -98,7 +98,7 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = text_size)
                                            axis.text.x = element_text(size = x_text_size),
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.1, 0.9))
+                                           legend.position = c(0.2, 0.9))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -109,7 +109,7 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
 
 plot(total_work.plot)
 
-ggsave(filename = "./plots/facebook_pfab/total_work.png", units = "cm",
+ggsave(filename = "./plots/facebook/total_work.png", units = "cm",
        plot = total_work.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
@@ -199,7 +199,7 @@ throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
 
 plot(throughput.plot)
 
-ggsave(filename = "./plots/facebook_pfab/throughput.png", units = "cm",
+ggsave(filename = "./plots/facebook/throughput.png", units = "cm",
        plot = throughput.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
@@ -252,5 +252,5 @@ clusters.plot <- clusters.plot +
 
 plot(clusters.plot)
 
-ggsave(filename = "./plots/facebook_pfab/clusters.png", units = "cm",
+ggsave(filename = "./plots/facebook/clusters.png", units = "cm",
        plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
