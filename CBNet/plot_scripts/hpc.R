@@ -23,19 +23,23 @@ throughput.table <- read.csv("./csv_data/hpc/throughput.csv")
 ############################# Define colors  ##################################
 
 #COLORS
-cbn_color = "#325387"
+#cbn_color = "#325387"
+cbn_color = "#000000"
 cbn1 = "#325387"
 cbn2 = "#325387"
 
-scbn_color = "#6C5B7B"
+#scbn_color = "#6C5B7B"
+scbn_color = "#ffffff"
 scbn1 = "#6C5B7B"
 scbn2 = "#6C5B7B"
 
-sn_color = "#021C02"
+#sn_color = "#021C02"
+sn_color = "#A8A7A7"
 sn1 = "#1A361A"
 sn2 = "#021C02"
 
-dsn_color = "#B53131"
+#dsn_color = "#B53131"
+dsn_color = "#2A363B"
 dsn1 = "#CF4F4F"
 dsn2 = "#B53131"
 
@@ -167,11 +171,11 @@ ggsave(filename = "./plots/hpc/makespan.png", units = "cm",
 
 throughput.table["abb"] <- revalue(throughput.table$project, 
                                    c("cbnet" = "CBN",
-                                     "seqcbnet" = "SCB",
+                                     "seqcbnet" = "SCBN",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN"))
 
-throughput.table$abb <- factor(throughput.table$abb, levels = c("SCB", "CBN", "SN", "DSN"))
+throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN","DSN", "SN", "SCBN"))
 
 
 throughput.table["dataset"] <- revalue(throughput.table$dataset, 
@@ -186,7 +190,7 @@ throughput.table %>% filter(
 
 # Init Ggplot Base Plot
 throughput.plot <- ggplot(throughput.table, aes(x = value, fill = abb)) +
-  geom_density(aes(y = ..count..), alpha = 0.5) 
+  geom_density(aes(y = ..count..), alpha = 0.67) 
 
 # Modify theme components -------------------------------------------
 throughput.plot <- throughput.plot + theme(text = element_text(size = text_size),
@@ -205,7 +209,7 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(x = expression(paste("Time (rounds) x", 10^6)), y = "Requests completed/round") +
-  scale_fill_manual(values = c(scbn_color, cbn_color, sn_color, dsn_color)) +
+  scale_fill_manual(values = c(cbn_color, dsn_color, sn_color, scbn_color)) +
   scale_y_continuous(lim = c(0, 0.8), breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/1000000)})
 
@@ -224,7 +228,7 @@ clusters.table["abb"] <- revalue(clusters.table$project,
                                    "splaynet" = "SN", 
                                    "displaynet" = "DSN"))
 
-clusters.table$abb <- factor(clusters.table$abb, levels = c("SCB", "CBN", "SN", "DSN"))
+clusters.table$abb <- factor(clusters.table$abb, levels = c("CBN","DSN", "SN", "SCBN"))
 
 
 clusters.table["dataset"] <- revalue(clusters.table$dataset, 
