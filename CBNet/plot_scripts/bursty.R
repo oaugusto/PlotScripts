@@ -109,14 +109,14 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = text_size)
                                            axis.text.x = element_text(size = x_text_size),
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.65, 0.85))
+                                           legend.position = c(0.65, 0.9))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{4}))) +
   scale_color_manual(values = c(opt_color, scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_y_continuous(breaks = seq(0, 200000, 20000), labels = function(x){paste0(x/10000)}) 
+  scale_y_continuous(lim = c(0, 150000), breaks = seq(0, 200000, 20000), labels = function(x){paste0(x/10000)}) 
 
 plot(total_work.plot)
 
@@ -202,14 +202,14 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.85, 0.7)) #+
+                                           legend.position = c(0.82, 0.77)) #+
   #facet_grid(. ~ size)
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = expression(paste("Time (rounds)", 10^4)), y = "Requests completed/round") +
+  labs(x = expression(paste("Time (rounds) x", 10^4)), y = "Requests completed/round") +
   scale_fill_manual(values = c(scbn_color, cbn_color, sn_color, dsn_color)) +
-  scale_y_continuous(breaks = seq(0, 5, 0.1)) +
+  scale_y_continuous(lim = c(0, 0.8), breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/10000)})
 
 plot(throughput.plot)
@@ -259,8 +259,9 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = text_size),
 clusters.plot <- clusters.plot + 
   labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(lim = c(0, 15000), breaks = seq(0, 15000, 2000), labels = function(x){paste0(x/1000)}) #+
-#coord_cartesian(xlim = c(0, 10))
+  scale_y_continuous(lim = c(0, 15000), breaks = seq(0, 15000, 2000), labels = function(x){paste0(x/1000)}) +
+  scale_x_continuous(breaks = seq(0, 10, 1)) +
+  coord_cartesian(xlim = c(0, 10))
 
 plot(clusters.plot)
 

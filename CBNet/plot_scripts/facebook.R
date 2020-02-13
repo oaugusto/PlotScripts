@@ -51,8 +51,8 @@ bt2 = "#555555"
 
 scale_imgs <- 1
 
-IMG_height = 20
-IMG_width = 20
+IMG_height = 15
+IMG_width = 13.4
 
 text_size <- 30
 x_title_size <- 25
@@ -84,8 +84,8 @@ total_work.table %>% filter(
 
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(operations.table, aes(x = abb, y = value, fill = operation)) +#, col = abb)) +
-  geom_bar(position = "stack", stat = "identity", alpha = 0.8) #+
-  #facet_grid(. ~ dataset)#, scales = 'free', space = 'free', nrow = 2)
+  geom_bar(position = "stack", stat = "identity", alpha = 0.8) +
+  facet_grid(. ~ dataset)#, scales = 'free', space = 'free', nrow = 2)
 
 
 # Modify theme components -------------------------------------------
@@ -98,14 +98,14 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = text_size)
                                            axis.text.x = element_text(size = x_text_size),
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.2, 0.9))
+                                           legend.position = c(0.25, 0.895))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Work x", 10^{6}))) +
   scale_color_manual(values = c(opt_color, scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_y_continuous(breaks = seq(0, 15000000, 2000000), labels = function(x){paste0(x/1000000)}) 
+  scale_y_continuous(lim = c(0, 15000000), breaks = seq(0, 15000000, 2000000), labels = function(x){paste0(x/1000000)}) 
 
 plot(total_work.plot)
 
@@ -187,14 +187,14 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.85, 0.7)) #+
-  #facet_grid(. ~ dataset)
+                                           legend.position = c(0.82, 0.75)) +
+  facet_grid(. ~ dataset)
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = expression(paste("Time (rounds)", 10^6)), y = "Requests completed per round") +
+  labs(x = expression(paste("Time (rounds) x", 10^6)), y = "Requests completed/round") +
   scale_fill_manual(values = c(scbn_color, cbn_color, sn_color, dsn_color)) +
-  scale_y_continuous(breaks = seq(0, 5, 0.1)) +
+  scale_y_continuous(lim = c(0, 0.8), breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/1000000)})
 
 plot(throughput.plot)
@@ -225,8 +225,8 @@ clusters.table %>% filter(
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") #+
-  #facet_grid(. ~ dataset)
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") +
+  facet_grid(. ~ dataset)
 # Add mean line
 #geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
@@ -248,6 +248,7 @@ clusters.plot <- clusters.plot +
   labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
   scale_y_continuous(lim = c(0, 900000), breaks = seq(0, 900000, 100000), labels = function(x){paste0(x/100000)}) +
+  scale_x_continuous(breaks = seq(0, 10, 1)) +
   coord_cartesian(xlim = c(0, 10))
 
 plot(clusters.plot)

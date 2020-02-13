@@ -104,14 +104,14 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = text_size)
                                            axis.text.x = element_text(size = x_text_size),
                                            axis.text.y = element_text(size = y_text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.18, 0.88))
+                                           legend.position = c(0.075, 0.895))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(y = expression(paste("Work x", 10^{4}))) +
+  labs(y = expression(paste("Work x", 10^{6}))) +
   scale_color_manual(values = c(opt_color, scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_y_continuous(breaks = seq(0, 20000000, 2000000), labels = function(x){paste0(x/1000000)}) 
+  scale_y_continuous(lim = c(0, 15000000), breaks = seq(0, 20000000, 2000000), labels = function(x){paste0(x/1000000)}) 
 
 plot(total_work.plot)
 
@@ -204,9 +204,9 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
 
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
-  labs(x = expression(paste("Time (rounds)", 10^6)), y = "Requests completed per round") +
+  labs(x = expression(paste("Time (rounds) x", 10^6)), y = "Requests completed/round") +
   scale_fill_manual(values = c(scbn_color, cbn_color, sn_color, dsn_color)) +
-  scale_y_continuous(breaks = seq(0, 5, 0.1)) +
+  scale_y_continuous(lim = c(0, 0.8), breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/1000000)})
 
 plot(throughput.plot)
@@ -264,6 +264,7 @@ clusters.plot <- clusters.plot +
   labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
   scale_fill_manual(values = c(sn_color, dsn_color)) +
   scale_y_continuous(lim = c(0, 900000), breaks = seq(0, 900000, 100000), labels = function(x){paste0(x/100000)}) +
+  scale_x_continuous(breaks = seq(0, 10, 1)) +
   coord_cartesian(xlim = c(0, 10))
 
 plot(clusters.plot)
