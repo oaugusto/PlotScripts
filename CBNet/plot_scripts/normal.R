@@ -7,6 +7,7 @@ library(ggplot2)
 library(gridExtra)
 library(tidyverse)
 library(plyr)
+library(stringi)
 
 # setup
 options(scipen = 999)
@@ -116,8 +117,9 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = text_size)
                                            plot.caption = element_blank(),
                                            axis.title.x = element_blank(),
                                            axis.title.y = element_text(size = y_title_size),
-                                           axis.text.x = element_text(size = x_text_size),
-                                           axis.text.y = element_text(size = y_text_size),
+                                           axis.text.x = element_text(size = x_text_size, color = "black"),
+                                           axis.text.y = element_text(size = y_text_size, color = "black"),
+                                           #legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
                                            legend.position = c(0.15, 0.9))
 
@@ -129,74 +131,10 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
   scale_y_continuous(lim = c(0, 150000), breaks = seq(0, 200000, 20000), labels = function(x){paste0(x/10000)}) #+
 #guides(color = FALSE)
 
-#ann_text <- data.frame(mean = 150000,lab = "Text",
-#                       cyl = factor(128,levels = c("128","256","512", "1024")))
-
-#total_work.plot <- total_work.plot +  geom_text(data = ann_text,label = "Text")
-
-# Create a text
-#grob <- grobTree(textGrob("OPT: StaticOPT\nCBN: CBNet\nSN: SplayNet\nDSN: DiSplayNet\nBT: Balanced Tree", 
-#                          x=0.65,  y=0.8, hjust=0,
-#                          gp=gpar(col="black", fontsize=14),
-#                          draw = c(TRUE, FALSE, FALSE, FALSE)))
-
-#total_work.plot <- total_work.plot + annotation_custom(grob)
-
 plot(total_work.plot)
 
 ggsave(filename = "./plots/normal/total_work.png", units = "cm",
        plot = total_work.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
-
-
-############################# makespan 1 ##################################
-
-
-makespan.table["abb"] <- revalue(makespan.table$project, 
-                                 c("cbnet" = "CBN",
-                                   "seqcbnet" = "SCB",
-                                   "splaynet" = "SN", 
-                                   "displaynet" = "DSN"))
-
-makespan.table$abb <- factor(makespan.table$abb, levels = c("CBN", "SCB", "DSN", "SN"))
-
-makespan.table$size <- as.factor(makespan.table$size)
-
-makespan.table %>% filter(
-  size %in% c(1024)) -> makespan.table
-
-# Init Ggplot Base Plot
-makespan.plot <- ggplot(makespan.table, aes(x = abb, y = mean, fill = abb)) +
-  geom_bar(stat = "identity", position=position_dodge(), alpha = 0.8) +
-  geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(num_sim)), 
-                    ymax = mean + ((qnorm(0.975)*std)/sqrt(num_sim)) ), 
-                width=.2) +
-  facet_grid(. ~ std_par)
-
-# Modify theme components -------------------------------------------
-makespan.plot <- makespan.plot + theme(text = element_text(size = 25),
-                                       plot.title = element_blank(),
-                                       plot.subtitle = element_blank(),
-                                       plot.caption = element_blank(),
-                                       axis.title.x = element_blank(),
-                                       axis.title.y = element_text(size = 25),
-                                       axis.text.x = element_text(size = 20),
-                                       axis.text.y = element_text(size = 20),
-                                       legend.text = element_text(size = 20),
-                                       legend.title = element_blank(),
-                                       legend.position = c(0.05, 0.83))
-
-makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
-                                       panel.grid.major = element_blank()) +
-  labs(x = "n", y = expression(paste("#Rounds x ", 10^{4}))) +
-  scale_color_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
-  scale_fill_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
-  scale_y_continuous(limits = c(0, 80000), breaks = seq(0, 80000, 10000), labels = function(x){paste0(x/10000)}) +
-  guides(color = guide_legend(override.aes = list(size = 5)))
-
-plot(makespan.plot)
-
-ggsave(filename = "./plots/normal/makespan.png", units = "cm",
-       plot = makespan.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 
 ############################# throughput  ##################################
@@ -228,9 +166,9 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
                                            plot.caption = element_blank(),
                                            axis.title.x = element_text(size = x_title_size),
                                            axis.title.y = element_text(size = y_title_size),
-                                           axis.text.x = element_text(size = x_text_size),
-                                           axis.text.y = element_text(size = y_text_size),
-                                           legend.text = element_text(size = text_size),
+                                           axis.text.x = element_text(size = x_text_size, color = "black"),
+                                           axis.text.y = element_text(size = y_text_size, color = "black"),
+                                           #legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
                                            legend.position = c(0.82, 0.77)) #+
   #facet_grid(. ~ std)
@@ -242,8 +180,13 @@ throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
   scale_y_continuous(lim = c(0, 0.8), breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/10000)})
 
+
+test <- c("SN <U+2229> DSN")
+test <- gsub("<U\\+(....)>", "\\\\u\\1", test)
+unesc <- stri_unescape_unicode(test)
+
 # Create a text
-grob <- grobTree(textGrob("SN and DSN", x=0.6,  y=0.12, hjust=0,
+grob <- grobTree(textGrob(unesc, x=0.6,  y=0.12, hjust=0,
                           gp=gpar(col="black", fontsize= 22)))
 
 throughput.plot <- throughput.plot +  annotation_custom(grob)
@@ -273,11 +216,11 @@ clusters.table %>% filter(
   std %in% c(1.6)) -> clusters.table
 
 clusters.table %>% filter(
-  abb %in% c("CBN")) -> clusters.table
+  abb %in% c("CBN", "DSN")) -> clusters.table
 
 # Init Ggplot Base Plot
 clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 0.5, col = "#000000") #+
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 1, col = "#000000") #+
   #facet_grid(. ~ std)
 # Add mean line
 #geom_vline(aes(xintercept=mean(value)), linetype="dashed")
@@ -289,17 +232,18 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = 25),
                                        plot.caption = element_blank(),
                                        axis.title.x = element_text(size = x_title_size),
                                        axis.title.y = element_text(size = y_title_size),
-                                       axis.text.x = element_text(size = x_text_size),
-                                       axis.text.y = element_text(size = y_text_size),
+                                       axis.text.x = element_text(size = x_text_size, color = "black"),
+                                       axis.text.y = element_text(size = y_text_size, color = "black"),
+                                       legend.text = element_text(size = text_size),
                                        legend.title = element_blank(),
-                                       legend.position = "none",
+                                       legend.position = c(0.82, 0.77),
                                        panel.grid.minor = element_blank(),
                                        panel.grid.major = element_blank())
 
 clusters.plot <- clusters.plot + 
   labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
-  scale_fill_manual(values = c(sn_color, dsn_color)) +
-  scale_y_continuous(lim = c(0, 15000), breaks = seq(0, 15000, 2000), labels = function(x){paste0(x/1000)}) +
+  scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
+  scale_y_sqrt(lim = c(0, 62000), breaks = seq(0, 60000, 10000), labels = function(x){paste0(x/1000)}) +
   scale_x_continuous(breaks = seq(0, 10, 1)) +
   coord_cartesian(xlim = c(0, 10))
 
@@ -307,3 +251,53 @@ plot(clusters.plot)
 
 ggsave(filename = "./plots/normal/clusters.png", units = "cm",
        plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
+
+############################# makespan 1 ##################################
+
+
+#makespan.table["abb"] <- revalue(makespan.table$project, 
+#                                 c("cbnet" = "CBN",
+#                                   "seqcbnet" = "SCB",
+#                                   "splaynet" = "SN", 
+#                                   "displaynet" = "DSN"))
+
+#makespan.table$abb <- factor(makespan.table$abb, levels = c("CBN", "SCB", "DSN", "SN"))
+
+#makespan.table$size <- as.factor(makespan.table$size)
+
+#makespan.table %>% filter(
+#  size %in% c(1024)) -> makespan.table
+
+# Init Ggplot Base Plot
+#makespan.plot <- ggplot(makespan.table, aes(x = abb, y = mean, fill = abb)) +
+#  geom_bar(stat = "identity", position=position_dodge(), alpha = 0.8) +
+#  geom_errorbar(aes(ymin = mean - ((qnorm(0.975)*std)/sqrt(num_sim)), 
+#                    ymax = mean + ((qnorm(0.975)*std)/sqrt(num_sim)) ), 
+#                width=.2) +
+#  facet_grid(. ~ std_par)
+
+# Modify theme components -------------------------------------------
+#makespan.plot <- makespan.plot + theme(text = element_text(size = 25),
+#                                       plot.title = element_blank(),
+#                                       plot.subtitle = element_blank(),
+#                                       plot.caption = element_blank(),
+#                                       axis.title.x = element_blank(),
+#                                       axis.title.y = element_text(size = 25),
+#                                       axis.text.x = element_text(size = 20),
+#                                       axis.text.y = element_text(size = 20),
+#                                       legend.text = element_text(size = 20),
+#                                       legend.title = element_blank(),
+#                                       legend.position = c(0.05, 0.83))
+
+#makespan.plot <- makespan.plot + theme(panel.grid.minor = element_blank(),
+#                                       panel.grid.major = element_blank()) +
+#  labs(x = "n", y = expression(paste("#Rounds x ", 10^{4}))) +
+#  scale_color_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
+#  scale_fill_manual(values = c(cbn_color, scbn_color, dsn_color, sn_color)) +
+#  scale_y_continuous(limits = c(0, 80000), breaks = seq(0, 80000, 10000), labels = function(x){paste0(x/10000)}) +
+#  guides(color = guide_legend(override.aes = list(size = 5)))
+
+#plot(makespan.plot)
+
+#ggsave(filename = "./plots/normal/makespan.png", units = "cm",
+#       plot = makespan.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
