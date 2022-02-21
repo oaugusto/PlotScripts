@@ -1,5 +1,5 @@
-#setwd("C:/Users/oaugusto/Desktop/Plots/CBNet")
-setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
+setwd("C:/Users/oaugu/Desktop/PlotScripts/CBNet")
+#setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
 
 ################################## Libraries ###################################
 
@@ -68,13 +68,14 @@ y_text_size <- 25
 
 total_work.table["abb"] <- revalue(total_work.table$project, 
                                    c("cbnet" = "CBN",
+                                     "cbnetAdapt" = "AD",
                                      "seqcbnet" = "SCB",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN",
                                      "optnet" = "OPT",
                                      "simplenet" = "BT"))
 
-total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCB", "CBN", "SN", "DSN", "BT"))
+total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCB", "CBN", "AD", "SN", "DSN", "BT"))
 
 total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation" = "Rotation",
                                                                        "routing" = "Routing"))
@@ -142,11 +143,12 @@ ggsave(filename = "./plots/pfab/total_work.png", units = "cm",
 
 throughput.table["abb"] <- revalue(throughput.table$project, 
                                    c("cbnet" = "CBN",
+                                     "cbnetAdapt" = "AD",
                                      "seqcbnet" = "SCBN",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN"))
 
-throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN","DSN", "SN", "SCBN"))
+throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN", "AD","DSN", "SN", "SCBN"))
 
 throughput.table["dataset"] <- revalue(throughput.table$dataset, 
                                    c("trace_0_1" = "Trace 0.1",
@@ -178,7 +180,7 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(x = expression(paste("Time (rounds) x", 10^6)), y = "Requests completed/round") +
-  scale_fill_manual(values = c(cbn_color, dsn_color, sn_color, scbn_color)) +
+  scale_fill_manual(values = c(cbn_color, bt_color, dsn_color, sn_color, scbn_color)) +
   scale_y_continuous(lim = c(0, 0.8), breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/1000000)})
 
@@ -235,9 +237,9 @@ clusters.plot <- clusters.plot + theme(text = element_text(size = text_size),
                                        panel.grid.major = element_blank())
 
 clusters.plot <- clusters.plot + 
-  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
+  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^5))) +
   scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_y_continuous(lim = c(0, 900000), breaks = seq(0, 900000, 100000), labels = function(x){paste0(x/100000)}) +
+  scale_y_continuous(lim = c(0, 1500000), breaks = seq(0, 1500000, 200000), labels = function(x){paste0(x/100000)}) +
   scale_x_continuous(breaks = seq(0, 10, 1)) +
   coord_cartesian(xlim = c(0, 10))
 

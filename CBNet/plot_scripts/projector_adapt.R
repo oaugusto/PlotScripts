@@ -56,7 +56,7 @@ bt2 = "#555555"
 scale_imgs <- 1
 
 IMG_height = 15
-IMG_width = 40
+IMG_width = 30
 
 text_size <- 30
 x_title_size <- 20
@@ -110,7 +110,7 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = text_size)
                                            axis.text.y = element_text(size = y_text_size, color = "black"),
                                            #legend.text = element_text(size = text_size),
                                            legend.title = element_blank(),
-                                           legend.position = c(0.075, 0.895))
+                                           legend.position = c(0.1, 0.895))
 
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
@@ -150,7 +150,7 @@ total_work.table %>% filter(
 
 # Init Ggplot Base Plot
 total_work.plot <- ggplot(total_work.table, aes(x = abb, y = value)) +
-  geom_bar(stat = "identity", position=position_dodge(), alpha = 0.8) +
+  geom_bar(stat = "identity", position=position_dodge(), alpha = 1, fill = c("#555E62")) +
   facet_grid(. ~ dataset)#, scales = 'free', space = 'free', nrow = 2)
 
 
@@ -169,7 +169,7 @@ total_work.plot <- total_work.plot + theme(text = element_text(size = text_size)
 total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(y = expression(paste("Rotations x", 10^{3}))) +
-  scale_color_manual(values = c(opt_color, scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
+  #scale_color_manual(values = c("#2A363B", scbn_color, cbn_color, sn_color, dsn_color, bt_color)) +
   scale_fill_manual(values = c("#2A363B")) +
   scale_y_continuous(lim = c(0, 10000), breaks = seq(0, 10000, 2000), labels = function(x){paste0(x/1000)}) 
 
@@ -240,7 +240,7 @@ clusters.table["abb"] <- revalue(clusters.table$project,
                                    "cbnetAdapt100" = "AD2",
                                    "cbnetAdapt500" = "AD3",
                                    "cbnetAdapt1000" = "AD4",
-                                   "displaynet" = "DSN")))
+                                   "displaynet" = "DSN"))
 
 clusters.table$abb <- factor(clusters.table$abb, levels = c("CBN","DSN", "SN", "SCBN"))
 

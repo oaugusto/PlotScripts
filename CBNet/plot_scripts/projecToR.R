@@ -1,5 +1,5 @@
-#setwd("C:/Users/oaugusto/Desktop/Plots/CBNet")
-setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
+setwd("C:/Users/oaugu/Desktop/PlotScripts/CBNet")
+#setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
 
 ################################## Libraries ###################################
 
@@ -72,13 +72,14 @@ num_sim <- 10
 
 total_work.table["abb"] <- revalue(total_work.table$project, 
                                                   c("cbnet" = "CBN",
+                                                    "cbnetAdapt" = "AD",
                                                     "seqcbnet" = "SCBN",
                                                     "splaynet" = "SN", 
                                                     "displaynet" = "DSN",
                                                     "optnet" = "OPT",
                                                     "simplenet" = "BT"))
 
-total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCBN","CBN", "SN", "DSN", "BT"))
+total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCBN","CBN", "AD", "SN", "DSN", "BT"))
 
 total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation" = "Rotation",
                                                                         "routing" = "Routing"))
@@ -129,7 +130,7 @@ total_work.plot <- total_work.plot + theme(panel.grid.minor = element_blank(),
   #guides(color = FALSE)
 
 # Create a text
-grob <- grobTree(textGrob("OPT: StaticOPT\nCBN: CBNet\nSN: SplayNet\nDSN: DiSplayNet\nBT: Balanced Tree", x=0.35,  y=0.75, hjust=0,
+grob <- grobTree(textGrob("OPT: StaticOPT\nCBN: CBNet\nAD: CBNetAdapt\nSN: SplayNet\nDSN: DiSplayNet\nBT: Balanced Tree", x=0.35,  y=0.75, hjust=0,
                           gp=gpar(col="black", fontsize= 24)))
 
 total_work.plot <- total_work.plot +  annotation_custom(grob)
@@ -145,11 +146,12 @@ ggsave(filename = "./plots/projecToR/total_work.png", units = "cm",
 
 throughput.table["abb"] <- revalue(throughput.table$project, 
                                    c("cbnet" = "CBN",
+                                     "cbnetAdapt" = "AD",
                                      "seqcbnet" = "SCBN",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN"))
 
-throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN","DSN", "SN", "SCBN"))
+throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN", "AD","DSN", "SN", "SCBN"))
 
 
 throughput.table %>% filter(
@@ -182,7 +184,7 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(x = expression(paste("Time (rounds) x", 10^4)), y = "Requests completed/round") +
-  scale_fill_manual(values = c(cbn_color, dsn_color, sn_color, scbn_color)) +
+  scale_fill_manual(values = c(cbn_color, bt_color, dsn_color, sn_color, scbn_color)) +
   scale_y_continuous(lim = c(0, 0.8), breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/10000)})
 
@@ -210,69 +212,69 @@ clusters.table %>% filter(
   abb %in% c("CBN", "DSN")) -> clusters.table
 
 # Init Ggplot Base Plot
-cluster_cdf.plot <- ggplot(clusters.table, aes(x = value, colour = abb)) +
-  stat_ecdf(aes(linetype = abb), geom = "step", size = 1.2) +
-  geom_hline(yintercept = 1, linetype="dashed") 
+#cluster_cdf.plot <- ggplot(clusters.table, aes(x = value, colour = abb)) +
+#  stat_ecdf(aes(linetype = abb), geom = "step", size = 1.2) +
+#  geom_hline(yintercept = 1, linetype="dashed") 
 
 
 # Modify theme components -------------------------------------------
-cluster_cdf.plot <- cluster_cdf.plot + theme(text = element_text(size = 25),
-                                       plot.title = element_blank(),
-                                       plot.subtitle = element_blank(),
-                                       plot.caption = element_blank(),
-                                       axis.title.x = element_text(size = x_title_size),
-                                       axis.title.y = element_text(size = y_title_size),
-                                       axis.text.x = element_text(size = 20, color = "black"),
-                                       axis.text.y = element_text(size = 20, color = "black"),
-                                       legend.title = element_blank(),
-                                       legend.position = c(0.375, 0.4))
+#cluster_cdf.plot <- cluster_cdf.plot + theme(text = element_text(size = 25),
+#                                       plot.title = element_blank(),
+#                                       plot.subtitle = element_blank(),
+#                                       plot.caption = element_blank(),
+#                                       axis.title.x = element_text(size = x_title_size),
+#                                       axis.title.y = element_text(size = y_title_size),
+#                                       axis.text.x = element_text(size = 20, color = "black"),
+#                                       axis.text.y = element_text(size = 20, color = "black"),
+#                                       legend.title = element_blank(),
+#                                       legend.position = c(0.375, 0.4))
 
-cluster_cdf.plot <- cluster_cdf.plot + theme(panel.grid.minor = element_blank(),
-                                       panel.grid.major = element_blank()) +
-  labs(x = "#Clusters", y = "CDF of Clusters") +
-  scale_color_manual(values = c("#2A363B","#A8A7A7")) +
-  scale_x_continuous(breaks = seq(0, 10, 1)) +
-  coord_cartesian(xlim = c(0, 10))
+#cluster_cdf.plot <- cluster_cdf.plot + theme(panel.grid.minor = element_blank(),
+#                                       panel.grid.major = element_blank()) +
+#  labs(x = "#Clusters", y = "CDF of Clusters") +
+#  scale_color_manual(values = c("#2A363B","#A8A7A7")) +
+#  scale_x_continuous(breaks = seq(0, 10, 1)) +
+#  coord_cartesian(xlim = c(0, 10))
   #coord_cartesian(xlim = c(0, 10))
 
-plot(cluster_cdf.plot)
+#plot(cluster_cdf.plot)
 
-ggsave(filename = "./plots/projecToR/clusters.png", units = "cm",
-       plot = cluster_cdf.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
+#ggsave(filename = "./plots/projecToR/clusters.png", units = "cm",
+#       plot = cluster_cdf.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 # Init Ggplot Base Plot
-#clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
-#  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 1, col = "#000000") #+
+clusters.plot <- ggplot(clusters.table, aes(x = value, fill = abb)) +
+  geom_histogram(aes(y = ..count..), position = "dodge", binwidth = 1, alpha = 1, col = "#000000") #+
   #facet_grid(. ~ size)
   # Add mean line
   #geom_vline(aes(xintercept=mean(value)), linetype="dashed")
 
 # Modify theme components -------------------------------------------
-#clusters.plot <- clusters.plot + theme(text = element_text(size = 25),
-#                                       plot.title = element_blank(),
-#                                       plot.subtitle = element_blank(),
-#                                       plot.caption = element_blank(),
-#                                       axis.title.x = element_text(size = 25),
-#                                       axis.title.y = element_text(size = 25),
-#                                       axis.text.x = element_text(size = 20, color = "black"),
-#                                       axis.text.y = element_text(size = 20, color = "black"),
-#                                       legend.text = element_text(size = text_size),
-#                                       legend.title = element_blank(),
-#                                       legend.position = c(0.82, 0.77),
-#                                       panel.grid.minor = element_blank(),
-#                                       panel.grid.major = element_blank())
+clusters.plot <- clusters.plot + theme(text = element_text(size = 25),
+                                       plot.title = element_blank(),
+                                       plot.subtitle = element_blank(),
+                                       plot.caption = element_blank(),
+                                       axis.title.x = element_text(size = 25),
+                                       axis.title.y = element_text(size = 25),
+                                       axis.text.x = element_text(size = 20, color = "black"),
+                                       axis.text.y = element_text(size = 20, color = "black"),
+                                       legend.text = element_text(size = text_size),
+                                       legend.title = element_blank(),
+                                       legend.position = c(0.82, 0.77),
+                                       panel.grid.minor = element_blank(),
+                                       panel.grid.major = element_blank())
 
-#clusters.plot <- clusters.plot + 
-#  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
-#  scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
-#  scale_y_sqrt(lim = c(0, 62000), breaks = seq(0, 60000, 10000), labels = function(x){paste0(x/1000)}) +
-#  scale_x_continuous(breaks = seq(0, 10, 1)) +
-#  coord_cartesian(xlim = c(0, 10))
+clusters.plot <- clusters.plot + 
+  labs(x = "#Clusters", y = expression(paste("#Rounds x", 10^3))) +
+  scale_fill_manual(values = c("#2A363B","#A8A7A7")) +
+  scale_y_sqrt(lim = c(0, 62000), breaks = seq(0, 60000, 10000), labels = function(x){paste0(x/1000)}) +
+  scale_x_continuous(breaks = seq(0, 10, 1)) +
+  coord_cartesian(xlim = c(0, 10))
 
-#plot(clusters.plot)
+plot(clusters.plot)
 
-#ggsave(filename = "./plots/projecToR/clusters.png", units = "cm",
-#       plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
+ggsave(filename = "./plots/projecToR/clusters.png", units = "cm",
+       plot = clusters.plot, device = "png",  width = IMG_width, height = IMG_height, scale = scale_imgs)
 
 ############################# makespan 1 ##################################
 

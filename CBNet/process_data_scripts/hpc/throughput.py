@@ -4,7 +4,7 @@ import sys
 import os
 import numpy
 
-projects = ["cbnet", "seqcbnet", "displaynet", "splaynet"]
+projects = ["cbnet", "cbnetAdapt", "seqcbnet", "displaynet", "splaynet"]
 datasets = ["cesar_mocfe", "cesar_nekbone", "cns_nospec", "multigrid"]
 
 input_dir = "../../../Data/hpc"

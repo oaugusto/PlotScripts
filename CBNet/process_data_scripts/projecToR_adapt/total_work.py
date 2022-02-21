@@ -6,7 +6,8 @@ import numpy
 import math
 
 projects = ["cbnet", "cbnetAdapt30", "cbnetAdapt100", "cbnetAdapt500", "cbnetAdapt1000", "displaynet", "simplenet", "optnet"]
-datasets = [1, 2, 4]
+datasets = [2, 4]
+#datasets = [1, 2, 4]
 
 input_dir = "../../../Data/projector_adapt"
 output_file = "../../csv_data/projector_adapt/total_work.csv"
@@ -32,7 +33,7 @@ for project in projects:
         content = [int(x.strip()) for x in content]
         routing = sum(content)
 
-        pr_file.write("{},{},{},{}\n".format(project, dataset, "rotation", rotation))
-        pr_file.write("{},{},{},{}\n".format(project, dataset, "routing", routing))
+        pr_file.write("{},ProjecToR x{},{},{}\n".format(project, dataset, "rotation", rotation))
+        pr_file.write("{},ProjecToR x{},{},{}\n".format(project, dataset, "routing", routing))
 
 pr_file.close()

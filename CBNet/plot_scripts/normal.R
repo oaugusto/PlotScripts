@@ -1,5 +1,5 @@
-#setwd("C:/Users/oaugusto/Desktop/Plots/CBNet")
-setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
+setwd("C:/Users/oaugu/Desktop/PlotScripts/CBNet")
+#setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
 
 ################################## Libraries ###################################
 

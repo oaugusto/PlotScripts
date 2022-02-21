@@ -5,8 +5,13 @@ import os
 import numpy
 import math
 
-projects = ["cbnet", "seqcbnet", "displaynet", "splaynet", "simplenet", "optnet"]
+projects = ["cbnet", "rand2", "rand4", "rand8", "rand16", "semisplaynet", "simplenet", "optnet"]
+#projects = ["cbnet", "seqopticalnet2048", "opticalnet2048", "simplenet", "optnet"]
+#projects = ["cbnet", "splaynet", "displaynet", "simplenet", "optnet"]
+#projects = ["cbnet", "cbnetAdapt", "seqcbnet", "displaynet", "splaynet", "simplenet", "optnet"]
+#numberOfNodes = [128, 1024]
 numberOfNodes = [128, 256, 512, 1024]
+#numberOfSimulations = 1
 numberOfSimulations = 10
 
 input_dir = "../../../Data/projector/newTor"

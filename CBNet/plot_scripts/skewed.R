@@ -1,5 +1,5 @@
-#setwd("C:/Users/oaugusto/Desktop/PlotScripts/ToN-bursty")
-setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
+setwd("C:/Users/oaugu/Desktop/PlotScripts/CBNet")
+#setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
 
 ################################## Libraries ###################################
 
@@ -71,13 +71,14 @@ num_sim <- 10
 
 total_work.table["abb"] <- revalue(total_work.table$project, 
                                    c("cbnet" = "CBN",
+                                     "cbnetAdapt" = "AD",
                                      "seqcbnet" = "SCBN",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN",
                                      "optnet" = "OPT",
                                      "simplenet" = "BT"))
 
-total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCBN", "CBN", "SN", "DSN", "BT"))
+total_work.table$abb <- factor(total_work.table$abb, levels = c("OPT", "SCBN", "CBN", "AD", "SN", "DSN", "BT"))
 
 total_work.table["operation"] <- revalue(total_work.table$operation, c("rotation" = "Rotation",
                                                                        "routing" = "Routing"))
@@ -137,11 +138,12 @@ ggsave(filename = "./plots/skewed/total_work.png", units = "cm",
 
 throughput.table["abb"] <- revalue(throughput.table$project, 
                                    c("cbnet" = "CBN",
+                                     "cbnetAdapt" = "AD",
                                      "seqcbnet" = "SCBN",
                                      "splaynet" = "SN", 
                                      "displaynet" = "DSN"))
 
-throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN","DSN", "SN", "SCBN"))
+throughput.table$abb <- factor(throughput.table$abb, levels = c("CBN", "AD","DSN", "SN", "SCBN"))
 
 
 throughput.table %>% filter(
@@ -168,7 +170,7 @@ throughput.plot <- throughput.plot + theme(text = element_text(size = text_size)
 throughput.plot <- throughput.plot + theme(panel.grid.minor = element_blank(),
                                            panel.grid.major = element_blank()) +
   labs(x = expression(paste("Time (rounds) x", 10^4)), y = "Requests completed/round") +
-  scale_fill_manual(values = c(cbn_color, dsn_color, sn_color, scbn_color)) +
+  scale_fill_manual(values = c(cbn_color, bt_color, dsn_color, sn_color, scbn_color)) +
   scale_y_continuous(lim = c(0, 0.8), breaks = seq(0, 5, 0.1)) +
   scale_x_continuous(labels = function(x){paste0(x/10000)})
 

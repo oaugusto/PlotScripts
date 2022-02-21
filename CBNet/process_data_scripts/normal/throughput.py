@@ -4,8 +4,9 @@ import sys
 import os
 import numpy
 
-projects = ["cbnet", "seqcbnet","displaynet", "splaynet"]
-numberOfNodes = [128, 1024]
+#projects = ["cbnet", "cbnetAdapt", "seqcbnet","displaynet", "splaynet"]
+projects = ["cbnet", "rand2", "rand4", "rand8", "rand16", "semisplaynet"]
+numberOfNodes = [128, 256, 512, 1024]
 std_sim = [0.2, 0.8, 1.6, 3.2, 6.4]
 numberOfSimulations = 1
 

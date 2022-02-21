@@ -1,5 +1,5 @@
-#setwd("C:/Users/oaugusto/Desktop/Plots/CBNet")
-setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
+setwd("C:/Users/oaugu/Desktop/PlotScripts/CBNet")
+#setwd("/home/oaugusto/Master/PlotsScripts/CBNet")
 
 ################################## Libraries ###################################
 
@@ -34,7 +34,7 @@ trace.plot <- ggplot(trace.table, aes(x = x, y = y, label = dataset)) +
   ) +
   geom_label_repel(
     data = subset(trace.table, type == "ProjecToR"),
-    nudge_x = -0.2 * 0.5,
+    nudge_x = -0.2 * 0.7,
     nudge_y = -0.08 * 0.5,
     segment.size = 0.2,
     direction = "y",
@@ -85,7 +85,7 @@ trace.plot <- ggplot(trace.table, aes(x = x, y = y, label = dataset)) +
     direction = "y",
     force = 1,
     size = 6
-  ) 
+  )
 
 trace.plot <- trace.plot +
   labs(y = "Non-temporal complexity", x = "Temporal complexity") +

@@ -5,10 +5,11 @@ import os
 import numpy
 import math
 
-projects = ["cbnet", "seqcbnet", "displaynet", "splaynet", "simplenet", "optnet"]
-numberOfNodes = [128, 1024]
+#projects = ["cbnet", "cbnetAdapt", "seqcbnet", "displaynet", "splaynet", "simplenet", "optnet"]
+projects = ["cbnet", "rand2", "rand4", "rand8", "rand16", "semisplaynet", "simplenet", "optnet"]
+numberOfNodes = [128, 256, 512, 1024]
 std_sim = [0.2, 0.8, 1.6, 3.2, 6.4]
-numberOfSimulations = 1
+numberOfSimulations = 10
 
 input_dir = "../../../Data/normal"
 output_file = "../../csv_data/normal/total_work.csv"

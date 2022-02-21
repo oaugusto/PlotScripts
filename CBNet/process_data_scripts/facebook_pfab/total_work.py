@@ -10,7 +10,7 @@ output_file = "../../csv_data/facebook_pfab/total_work.csv"
 pr_file = open(output_file, "w")
 pr_file.write("project,dataset,operation,value\n")
 
-projects = ["cbnet", "seqcbnet", "displaynet", "splaynet", "simplenet", "optnet"]
+projects = ["cbnet", "cbnetAdapt", "seqcbnet", "displaynet", "splaynet", "simplenet", "optnet"]
 datasets = ["trace_0_1", "trace_0_5", "trace_0_8"]
 
 input_dir = "../../../Data/pfab"
